@@ -1,0 +1,45 @@
+@startuml
+!includeurl  https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+'# remove <<system>> above each block
+HIDE_STEREOTYPE()
+
+System(protocol, "protocol", "Defines handling of any incoming DICOM dataset") #121111
+
+System(deid1, "deidentifier", "Implements a protocol") #A8A8A8
+System(deid2, "deidentifier", "Implements a protocol") #4B4B4A
+System(deid3, "deidentifier", "Implements a protocol") #A8A8A8
+
+deid1 .up[#A8A8A8]. protocol
+deid2 .up. protocol
+deid3 .up[#A8A8A8]. protocol
+
+deid1 -[hidden]> deid2
+deid3 -[hidden]l-> deid2
+
+System(delta1, "DeltaSet", "Change/Delta for each DICOM tag") #CECECE
+System(delta2, "DeltaSet", "Change/Delta for each DICOM tag") #7D7D7D
+System(delta3, "DeltaSet", "Change/Delta for each DICOM tag") #CECECE
+
+delta1 .up[#CECECE]. deid2
+delta2 .up. deid2
+delta3 .up[#CECECE]. deid2
+
+delta1 -[hidden]> delta2
+delta3 -[hidden]l-> delta2
+
+System(ds1, "Dataset", "DICOM dataset") #E6E6E7
+System(ds2, "Dataset", "DICOM dataset") #A7A6A6
+System(ds3, "Dataset", "DICOM dataset") #E6E6E7
+
+ds1 .up[#CECECE]. delta2
+ds2 .up. delta2
+ds3 .up[#CECECE]. delta2
+
+delta1 -[hidden]> delta2
+delta3 -[hidden]l-> delta2
+
+@enduml
+
+
+
