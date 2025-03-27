@@ -29,5 +29,24 @@ There might be python code to define constants, transformations between objects 
 ## What is it not?
 Anything that does any actual image processing. No loading of DICOM files anywhere.
 
-## Building locally
-`make docs_html`
+## For docs editors
+### Render html docs
+Go to 
+(in docs/build): `make docs_html`
+
+### Fancy auto-updating 
+Auto-reload a html view as you change the docs source.
+Requirements:
+* Linux or WSL (this uses some subshell and piping tricks)
+* [entr](https://github.com/eradman/entr) - Run a command when files change. Apt install this
+* [livereload](https://livereload.readthedocs.io/en/latest/index.html) - Serve local files and auto-reload on change. Python lib found as dev dependency in midom.
+* Possibly firefox to make livereload work properly
+
+Steps:
+* Start a shell in this midom base dir (where Makefile is) 
+* run `uv run make launch_source_listener`
+* Open the livereload url printed in the script output. By default this is http://127.0.0.1:35729/
+
+You might have to reload the page once to link livereload to the browser. After that, any
+save to a `.rst` or `.puml` file will trigger rebuild of docs/build, which will in turn
+trigger a page reload
