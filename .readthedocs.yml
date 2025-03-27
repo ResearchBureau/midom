@@ -28,3 +28,8 @@ sphinx:
 ##
 # • https://docs.readthedocs.io/en/stable/guides/reproducible-builds.html
 #
+
+# Optionally declare the Python requirements required to build your docs
+python:
+  install:
+  - requirements: docs/docs_requirements.txt
