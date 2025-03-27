@@ -18,7 +18,14 @@ build:
   # the output during build.
   #
   apt_packages:
-    - plantuml
+    - default-jre
+    - graphviz
+
+
+  jobs:
+    pre_install:
+      - docs/scripts/install_plantuml.sh
+
 
 ##
 # Build documentation in the "docs/source" directory with Sphinx
