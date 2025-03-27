@@ -24,7 +24,7 @@ build:
 
   jobs:
     pre_install:
-      - docs/scripts/install_plantuml.sh
+      - bash docs/scripts/install_plantuml.sh
 
 
 ##
