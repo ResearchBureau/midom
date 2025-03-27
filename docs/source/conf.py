@@ -2,6 +2,7 @@
 #
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
+import os
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -17,7 +18,14 @@ release = '0.1'
 # -- PDF output options ------------------------------------------------------
 extensions = ['sphinxcontrib.plantuml']
 
-plantuml = 'java -jar /usr/share/java/plantuml.jar'
+# For ReadTheDocs environment
+if os.environ.get('READTHEDOCS', False):
+    plantuml = 'plantuml'
+else:
+    # Local development path (adjust as needed)
+    plantuml = 'java -jar /usr/share/java/plantuml.jar'
+
+
 
 templates_path = ['_templates']
 exclude_patterns = []
