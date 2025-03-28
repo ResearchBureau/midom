@@ -6,3 +6,6 @@ show_built_docs:
 
 launch_source_listener:
 	(find docs/source/ -type f \( -name "*.rst" -o -name "*.puml" \) | entr -s 'uv run make docs_html' & livereload docs/build/html -t docs/build/html/index.html) | cat
+
+start_editing:
+	uv run make launch_source_listener

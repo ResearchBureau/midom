@@ -4,10 +4,7 @@ Medical Image Deidentification Object Model
 
 A set of concepts and relations to describe the process of DICOM deidentification.
 
-.. uml:: diagrams/system_context.puml
-
-a
-link to :ref:`Objects`
+link to :ref:`objects`
 
 .. toctree::
     :maxdepth: 2
@@ -15,3 +12,6 @@ link to :ref:`Objects`
 
     intro
     objects
+    glossary
+    parts
+    spaces

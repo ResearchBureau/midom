@@ -1,19 +1,27 @@
 .. _objects:
 
-.. uml:: diagrams/system_context.puml
-
 Objects
 =======
 
+.. uml:: diagrams/system_context.puml
+
+
+
+.. _protocol:
 Protocol
 --------
+
+.. _deidentifier:
 
 Deidentifier
 ------------
 
+.. _deltaset:
+
 Deltaset
 --------
 
+.. _dataset:
 Dataset
 -------
 

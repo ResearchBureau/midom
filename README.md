@@ -23,8 +23,7 @@ Niche, but existent nonetheless.
 
 ## What is it?
 An information model first and foremost. Concept definitions with clear descriptions of
-their relations.
-There might be python code to define constants, transformations between objects maybe.
+their relations. There might be python code to define constants, transformations between objects maybe.
 
 ## What is it not?
 Anything that does any actual image processing. No loading of DICOM files anywhere.
