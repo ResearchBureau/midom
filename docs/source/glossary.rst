@@ -25,7 +25,7 @@ DICOM Tag
 .. _dicom_element:
 
 DICOM Element
-    A tag - Value pair. Like `PatientName: A_Smith`
+    A tag - Value pair. Like ``PatientName: A_Smith``
 
 .. _action:
 
@@ -40,6 +40,6 @@ Delta
 .. _delta_set:
 
 Delta set
-    A set of Delta's for a set of distinct DICOM elements.
+    A set of Deltas for a set of distinct DICOM elements.
 
 
