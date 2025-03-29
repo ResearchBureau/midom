@@ -1,7 +1,7 @@
-.. _parts:
+.. _modules:
 
-Parts
-=====
+Modules
+=======
 The four constituent parts of a :ref:`Protocol`
 
 <add image of parts here>

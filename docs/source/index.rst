@@ -13,5 +13,5 @@ link to :ref:`objects`
     intro
     objects
     glossary
-    parts
+    modules
     spaces

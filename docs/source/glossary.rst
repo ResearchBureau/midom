@@ -42,4 +42,21 @@ Delta
 Delta set
     A set of Deltas for a set of distinct DICOM elements.
 
+.. _PII:
 
+PII
+    Personally Identifiable information. Also called `PI` (Personal Information) or `PHI`
+    (Personal Health Information).
+
+.. _pixel_data:
+
+Pixel data
+    A special :ref:`dicom_element` that contains the bytes for the image component
+    of a DICOM dataset. This element often take up many times more data than all other
+    elements combined. Its processing is done by the specialized :ref:`pixel module <pixel>`
+
+Private tag
+    DICOM private tags are custom data elements that aren't part of the standard
+    specification, allowing healthcare organizations to store proprietary or specialized
+    information. Private tags enhance flexibility, but are a well known PII leak risk.
+    They are handled by the specialized :ref:`private module <private>`.
