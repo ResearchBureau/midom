@@ -3,33 +3,88 @@
 Objects
 =======
 
-The different levels of deidentifying a DICOM dataset. Deidentification comes down to
-changing the right parts of a dataset. If leave out the special cases of :ref:`pixel data<pixel>`
-and private tags, The change to each :ref:`DICOM element <dicom_element>`
-in a single :ref:`dataset <dataset>` can be characterized as a :ref:`delta set <deltaset>`.
-A DeltaSet
+Objects at different levels of deidentifying a DICOM dataset. Deidentification comes down to
+changing the right parts of a :ref:`DICOM dataset <objects_dataset>`. The change to each :ref:`DICOM element <dicom_element>`
+in a single :ref:`dataset <objects_dataset>` can be characterized as a :ref:`delta set <objects_deltaset>`.
+A DeltaSet is applied by a :ref:`deidentifier <objects_deidentifier>`. A deidentifier is a
+concrete implementation of a :ref:`Protocol <objects_protocol>`.
 
 .. uml:: diagrams/system_context.puml
+   :caption: Deidentification objects from abstract (top) to concrete (bottom)
+
+.. _objects_dataset:
+
+Dataset
+-------
+
+A standardized container that stores a medical image along with associated metadata.
+Each dataset contains both pixel data (the actual medical image) and a comprehensive set
+of information tags that describe patient details, acquisition parameters, and clinical
+context. Each element in a dataset consists of a tag, tag description and value.
+For example:
+
++------------------+-------------------------------+-----------------------+
+| Tag              | Description                   | Example Value         |
++==================+===============================+=======================+
+| (0010,0010)      | Patient's Name                | SMITH^JOHN            |
++------------------+-------------------------------+-----------------------+
+| (0010,0020)      | Patient ID                    | MRN12345678           |
++------------------+-------------------------------+-----------------------+
+| (0010,0030)      | Patient's Birth Date          | 19700101              |
++------------------+-------------------------------+-----------------------+
+| (0008,0020)      | Study Date                    | 20240315              |
++------------------+-------------------------------+-----------------------+
+| (0008,0060)      | Modality                      | MR                    |
++------------------+-------------------------------+-----------------------+
+| (0008,0070)      | Manufacturer                  | Medical systems LTD   |
++------------------+-------------------------------+-----------------------+
+| (0008,0090)      | Referring Physician's Name    | JONES^SARAH^M.D.      |
++------------------+-------------------------------+-----------------------+
+| (0020,000D)      | Study Instance UID            | 1.2.840.10008.1.2.3.4 |
++------------------+-------------------------------+-----------------------+
+
+DICOM datasets can be stored as files, in databases or in memory.
 
 
+.. _objects_deltaset:
 
-.. _protocol:
+Deltaset
+--------
+A set of observed changes to dataset elements. See :ref:`the Spaces and Codes page <spaces_delta_codes>` for a full description
+
+Like this:
+
++---------------------------+-----------------+-----------------+-------------+
+| Tag Name                  | Value Before    | Value After     | Delta       |
++===========================+=================+=================+=============+
+| PatientName               | SMITH^JOHN      | Patient01       | CHANGED     |
++---------------------------+-----------------+-----------------+-------------+
+| Modality                  | CT              | CT              | UNCHANGED   |
++---------------------------+-----------------+-----------------+-------------+
+| Study Date                | 20240315        | <tag not found> | REMOVED     |
++---------------------------+-----------------+-----------------+-------------+
+| Manufacturer              | Company A       | <empty>         | EMPTIED     |
++---------------------------+-----------------+-----------------+-------------+
+| De-identification Method  | <tag not found> | deidentifier B  | CREATED     |
++---------------------------+-----------------+-----------------+-------------+
+
+
+.. _objects_deidentifier:
+
+Deidentifier
+------------
+A piece of software that takes a dataset and removes :ref:`PHI` from it. It does this
+via four :ref:`components`: :ref:
+
+
+Implements a :ref:`deidentification protocol <objects_protocol>`
+
+
+.. _objects_protocol:
 
 Protocol
 --------
 
-.. _deidentifier:
 
-Deidentifier
-------------
 
-.. _deltaset:
-
-Deltaset
---------
-
-.. _dataset:
-
-Dataset
--------
 

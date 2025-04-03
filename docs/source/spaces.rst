@@ -8,7 +8,7 @@ it becomes easier to reason about relationships and operations.
 
 Dataset Space
 -------------
-All DICOM datasets
+All DICOM datasets. A :ref:`dataset <Dataset>`
 
 
 Delta Space
@@ -25,28 +25,30 @@ listed in `PS3.15 table E.1-1a <https://dicom.nema.org/medical/dicom/current/out
 
 Example action codes:
 
-+---------------+----------------------+
-| Code          | Description          |
-+===============+======================+
-| D             | Replace with dummy   |
-+---------------+----------------------+
-| Z             | Replace with empty   |
-+---------------+----------------------+
-| X             | Remove               |
-+---------------+----------------------+
-| K             | Keep                 |
-+---------------+----------------------+
-| C             | Clean                |
-+---------------+----------------------+
++---------------+------------------------------+
+| Code          | Description                  |
++===============+==============================+
+| D             | Replace with dummy           |
++---------------+------------------------------+
+| Z             | Replace with empty or dummy  |
++---------------+------------------------------+
+| X             | Remove                       |
++---------------+------------------------------+
+| K             | Keep                         |
++---------------+------------------------------+
+| C             | Clean                        |
++---------------+------------------------------+
+| U             | Replace with UID             |
++---------------+------------------------------+
 
-Action codes are used to describe what _should_ happen to a tag. In contrast,
-:ref:`change_codes` are used to describe an observable change in a tag value.
+Action codes are used to describe what *should* happen to a tag. In contrast,
+:ref:`delta codes <spaces_delta_codes>` are used to describe an observable change in a tag value.
 
-.. _change_codes:
+.. _spaces_delta_codes:
 
-Change Codes
+Delta Codes
 ------------
-A change code or *Delta Code* describe an observable change in a DICOM element, typically
+A Delta Code or describes an observable change in a DICOM element, typically
 before and after processing
 
 +---------------+----------------------+
