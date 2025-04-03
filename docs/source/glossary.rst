@@ -14,7 +14,7 @@ protocol
     See :ref:`the objects page <objects_protocol>` as well.
 
 deidentifier
-...........
+............
     The concrete implementation of a :ref:`objects_protocol`. Takes a :ref:`dataset` and then either
     aplies a transformation to it, or rejects it. Different deidentifiers can implement
     the same protocol.
@@ -36,7 +36,7 @@ DICOM Element
 
 DICOM Dataset
 .............
-    A set of :ref:`DICOM elements <dicom_element>`. For extended description, see :ref:`the objects page <objects_deltaset>`
+    A set of :ref:`DICOM elements <dicom_element>`. For extended description, see :ref:`the objects page <objects_dataset>`
 
 .. _action:
 

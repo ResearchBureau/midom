@@ -73,18 +73,33 @@ Like this:
 
 Deidentifier
 ------------
-A piece of software that takes a dataset and removes :ref:`PHI` from it. It does this
-via four :ref:`components`: :ref:
+A piece of software that takes a :ref:`dataset` and removes :ref:`PHI` from it. It does this
+via four :ref:`components`: :ref:`filter`, :ref:`tags`, :ref:`pixel` and :ref:`private`.
 
+A deidentifier can only do one of two things with an incoming dataset:
 
-Implements a :ref:`deidentification protocol <objects_protocol>`
+    1. It rejects the dataset trough triggering one of the :ref:`filters <filter>`
+    2. It applies a transformation to the dataset. The transformation is defined in the
+       :ref:`tags`, :ref:`pixel` and :ref:`private` components. The observed changes
+       in the tags form a :ref:`objects_deltaset`
+
+A deidentifier implements a :ref:`deidentification protocol <objects_protocol>`. Multiple
+deidentifiers can implement the same protocol.
+
+Contrary to a :ref:`Protocol`, a deidentifier is a concrete implementation. meaning it
+will have to actually implement a protocol's abstract :ref:`action_codes`. For action
+codes like ``REMOVE`` this is trivial, just remove the dicom element. But for ``CLEAN``
+many different operations might be said to implement 'cleaning'. It is up to the creators
+of a deidentifier to defend the choice for an implementation in a given context.
 
 
 .. _objects_protocol:
 
 Protocol
 --------
+Defines what to do with an incoming dataset using four :ref:`components`:
+:ref:`filter`, :ref:`tags`, :ref:`pixel` and :ref:`private`.
 
-
+The main difference with a :ref:`deidentifier` is
 
 
