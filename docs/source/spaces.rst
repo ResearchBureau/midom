@@ -8,7 +8,16 @@ it becomes easier to reason about relationships and operations.
 
 Dataset Space
 -------------
-All DICOM datasets. A :ref:`dataset <Dataset>`
+All possible :ref:`DICOM datasets <Dataset>`. Each :ref:`DICOM tag <tag>` is a
+dimension, the possible values of the tag are the value of the dimension.
+
+.. uml:: diagrams/dataset_space.puml
+   :caption: Dataset Space
+
+Several dimensions in this space are infinite. ``PixelData``,
+``WaveformData``, ``SpectroscopyData`` and ``EncapsulatedDocument`` are all potentially
+infinite in size, only constrained by practical implementation.
+
 
 
 Delta Space

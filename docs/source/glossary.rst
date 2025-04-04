@@ -71,6 +71,9 @@ pixel data
     of a DICOM dataset. This element often take up many times more data than all other
     elements combined. Its processing is done by the specialized :ref:`pixel module <pixel>`
 
+
+.. _private_tag:
+
 private tag
 ...........
     DICOM private tags are custom data elements that aren't part of the standard

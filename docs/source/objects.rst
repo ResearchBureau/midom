@@ -3,11 +3,12 @@
 Objects
 =======
 
-Objects at different levels of deidentifying a DICOM dataset. Deidentification comes down to
-changing the right parts of a :ref:`DICOM dataset <objects_dataset>`. The change to each :ref:`DICOM element <dicom_element>`
-in a single :ref:`dataset <objects_dataset>` can be characterized as a :ref:`delta set <objects_deltaset>`.
-A DeltaSet is applied by a :ref:`deidentifier <objects_deidentifier>`. A deidentifier is a
-concrete implementation of a :ref:`Protocol <objects_protocol>`.
+Objects at different levels of deidentifying a DICOM dataset. Deidentification comes
+down to changing the right parts of a :ref:`DICOM dataset <objects_dataset>`. The
+change to each :ref:`DICOM element <dicom_element>` in a single :ref:`dataset <objects_dataset>`
+can be characterized as a :ref:`delta set <objects_deltaset>`. A DeltaSet is effected
+by a :ref:`deidentifier <objects_deidentifier>`. A deidentifier is a concrete
+implementation of a :ref:`Protocol <objects_protocol>`.
 
 .. uml:: diagrams/system_context.puml
    :caption: Deidentification objects from abstract (top) to concrete (bottom)
@@ -100,6 +101,7 @@ Protocol
 Defines what to do with an incoming dataset using four :ref:`components`:
 :ref:`filter`, :ref:`tags`, :ref:`pixel` and :ref:`private`.
 
-The main difference with a :ref:`deidentifier` is
+The main difference with a :ref:`deidentifier` is that a protocol does not directly
+implement any processing. It only defines what **should** happen
 
 
