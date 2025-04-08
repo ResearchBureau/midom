@@ -28,6 +28,32 @@ infinite in size, only constrained by practical implementation.
 
 The number of permutations is so large as to be practically infinite.
 
+Dataset subspaces
+-----------------
+The space created by a subset of all dicom tags.
+
+.. _image_typ_id_subspace:
+
+Image Type ID subspace
+......................
+Sixteen tags that contain information about the system that produced this DICOM image. Mainly
+used for mapping :ref:`PHI` regions. In code it looks like this
+
+
+.. literalinclude:: ../../midom/subspaces.py
+   :language: python
+   :pyobject: ImageTypeIDSubspace
+
+.. _e1_1_subspace:
+
+E1-1 subspace
+.............
+All non-private tags mentioned in `DICOM PS3.15 table E.1-1 <https://dicom.nema.org/medical/dicom/current/output/chtml/part15/chapter_E.html#table_E.1-1>`_
+If a tag is in this list, it means the official DICOM deidentification rules have something to
+say about how to handle that tag. These 640 tags are the only ones to have an :ref:`action code <action_codes>`
+associated with them.
+
+
 
 Delta Space
 -----------
@@ -89,28 +115,3 @@ before and after processing
 
 Note that multiple :ref:`action codes<action_codes>` can cause the same change code
 to be observed.
-
-Dataset subspaces
------------------
-The space created by a subset of all dicom tags.
-
-.. _image_typ_id_subspace:
-
-Image Type ID subspace
-......................
-Tags that contain information about the system that produced this DICOM image. Mainly
-used for mapping :ref:`PHI` regions
-
-
-.. literalinclude:: ../../midom/subspaces.py
-   :language: python
-   :pyobject: ImageTypeIDSubspace
-
-.. _e1_1_subspace:
-
-E1-1 subspace
-.............
-All non-private tags mentioned in `DICOM PS3.15 table E.1-1 <https://dicom.nema.org/medical/dicom/current/output/chtml/part15/chapter_E.html#table_E.1-1>`_
-If a tag is in this list, it means the official DICOM deidentification rules have something to
-say about how to handle that tag. These 640 tags are the only ones to have an :ref:`action code <action_codes>`
-associated with them.
