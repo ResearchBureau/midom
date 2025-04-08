@@ -9,20 +9,33 @@ it becomes easier to reason about relationships and operations.
 Dataset Space
 -------------
 All possible :ref:`DICOM datasets <Dataset>`. Each :ref:`DICOM tag <tag>` is a
-dimension, the possible values of the tag are the value of the dimension.
+dimension, the possible values of the tag are the value of the dimension. Each unique
+dataset is a unique point in dataset space.
 
 .. uml:: diagrams/dataset_space.puml
-   :caption: Dataset Space
+   :caption: Dataset Space contains all possible values for all non-private DICOM tags.
+    Each point is a unique :ref:`data set <dataset>`.
 
-Several dimensions in this space are infinite. ``PixelData``,
+:ref:`Private tags <private_tag>` are *not* part of dataset space.
+
+Size
+....
+This space has one dimension for each :ref:`tag`, which comes to slightly over 4000.
+The size of each dimension is bounded by each tag's :ref:`value_representation`. Some
+value representations, like 'Other Byte String' are potentially infinite. Tags like ``PixelData``,
 ``WaveformData``, ``SpectroscopyData`` and ``EncapsulatedDocument`` are all potentially
 infinite in size, only constrained by practical implementation.
 
+The number of permutations is so large as to be practically infinite.
 
 
 Delta Space
 -----------
-All possible :ref:`deltas<delta>`.
+All possible :ref:`delta sets <delta_set>`.
+
+.. uml:: diagrams/delta_space.puml
+   :caption: Dataset Space contains all possible changes all non-private DICOM tags.
+    Each point is a unique :ref:`delta set <delta_set>`.
 
 .. _action_codes:
 
@@ -76,3 +89,28 @@ before and after processing
 
 Note that multiple :ref:`action codes<action_codes>` can cause the same change code
 to be observed.
+
+Dataset subspaces
+-----------------
+The space created by a subset of all dicom tags.
+
+.. _image_typ_id_subspace:
+
+Image Type ID subspace
+......................
+Tags that contain information about the system that produced this DICOM image. Mainly
+used for mapping :ref:`PHI` regions
+
+
+.. literalinclude:: ../../midom/subspaces.py
+   :language: python
+   :pyobject: ImageTypeIDSubspace
+
+.. _e1_1_subspace:
+
+E1-1 subspace
+.............
+All non-private tags mentioned in `DICOM PS3.15 table E.1-1 <https://dicom.nema.org/medical/dicom/current/output/chtml/part15/chapter_E.html#table_E.1-1>`_
+If a tag is in this list, it means the official DICOM deidentification rules have something to
+say about how to handle that tag. These 640 tags are the only ones to have an :ref:`action code <action_codes>`
+associated with them.

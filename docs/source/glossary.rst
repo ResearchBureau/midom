@@ -25,18 +25,60 @@ DICOM Tag
 .........
     The name for a single type of data in a :ref:`dataset`. Like ``Modality``, ``PatientAge``, etc.
     All `4000+ official dicom tags are listed here <https://www.dicomlibrary.com/dicom/dicom-tags/>`_.
+    There are also :ref:`private tags <private_tag>` which can be created by any DICOM producer.
+
+    Each dicom tag has an associated :ref:`value_representation`.
+
+
+.. _value_representation:
+
+Value Representation (VR)
+.........................
+The 'data type' of a :ref:`DICOM element's<dicom_element>` value. For example an int,
+a string, a date. Also contains more exotic datatypes like 'Unlimited Text'. All DICOM
+VR's are `listed in the DICOM standard <https://dicom.nema.org/dicom/2013/output/chtml/part05/sect_6.2.html>`_
+
 
 .. _dicom_element:
 
 DICOM Element
 .............
-    A tag - Value pair. Like ``PatientName: A_Smith``
+    A :ref:`tag` - Value pair. Like ``PatientName: A_Smith``
 
 .. _dataset:
 
 DICOM Dataset
 .............
     A set of :ref:`DICOM elements <dicom_element>`. For extended description, see :ref:`the objects page <objects_dataset>`
+
+.. _imagedata_element:
+
+ImageData element
+.................
+
+    A :ref:`dicom_element` that contains image data. In most DICOM files this element is
+    several times bigger than all other elements combined. The most common image data element
+    is ``PixelData``
+
+    .. code-block:: text
+
+        (7FE0,0010) PixelData
+
+    But there are several others:
+
+    .. code-block:: text
+
+        (7FE0,0008) FloatPixelData
+        (7FE0,0009) DoubleFloatPixelData
+        (0070,0022) GraphicData
+        (5400,0110) WaveformData
+
+    This list might not be complete. The criteria for what constitutes 'image data' are not
+    completely set.
+
+
+
+
 
 .. _action:
 
@@ -62,6 +104,14 @@ PHI
 ...
     Personal Health Information. Also called **PII** *(Personally Identifiable information)* or **`PI`** *(Personal Information)*.
     MIDOM prefers the term PHI as this is more specifically `defined in the health domain <https://www.hipaajournal.com/phi-vs-pii/>`_.
+
+    For medical imaging data, personal health information is found in many of the standard :ref:`DICOM elements <dicom_element>`.
+    Obvious ones are patient name and date of birth. Next to that there are many more.
+    The `DICOM standard lists more than 400 elements <https://dicom.nema.org/medical/dicom/current/output/chtml/part15/chapter_E.html#table_E.1-1>`_
+    for which some kind of processing is required to deidentify.
+
+    In addition to elements, PHI can also be present in burnt-in information, implant serial numbers and faces.
+
 
 .. _pixel_data:
 

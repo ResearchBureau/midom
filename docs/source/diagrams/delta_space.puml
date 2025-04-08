@@ -1,0 +1,31 @@
+@startuml
+!includeurl  https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!includeurl  https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+'# remove <<system>> above each block
+HIDE_STEREOTYPE()
+
+
+
+Boundary(space, "Delta Space", "All possible delta sets") {
+    Container(ds1, "Ds1") #65B27D
+    Container(ds2, "Ds2") #65B27D
+    Container(ds3, "Ds3") #65B27D
+    Container(dsX, "etc..") #A8A8A8
+}
+
+ds1 -[hidden]r- ds2
+ds2 -[hidden]r- ds3
+dsX -[hidden]l- ds3
+
+Container(ds1_detail, "DeltaSet 1", "", "| tag1 | UNCHANGED |\n| tag2 | CHANGED |\n etc...") #96B7A0
+ds1 -- ds1_detail
+
+Container(ds2_detail, "DeltaSet 2", "", "| tag1 | UNCHANGED |\n| tag2 | REMOVED |\n etc...") #96B7A0
+ds2 -- ds2_detail
+
+Container(ds3_detail, "DeltaSet 3", "", "| tag1 | EMPTIED |\n| tag2 | REMOVED |\n etc...") #96B7A0
+ds3 -- ds3_detail
+
+
+@enduml

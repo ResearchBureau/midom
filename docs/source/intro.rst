@@ -31,13 +31,19 @@ describing concepts and showing their relationships.
 
 Non-goals
 ---------
-What MIDOM is not. Most importantly, MIDOM does not address any of the organizational
-elements involved in medical image deidentification. These are arguably _more_ important
-than the technical elements, but nevertheless out of scope here. It is hoped that
-MIDOM will help to clear up some of the required organizational choices.
+What MIDOM is not.
 
-Intended audience
------------------
+No organizational elements
+    MIDOM does not address any of the organizational elements involved in medical image
+    deidentification. These are arguably *more* important than the technical elements,
+    but nevertheless out of scope here. It is hoped that MIDOM will facilitate
+    organizational choices by removing technical doubt.
 
-Background
-----------
+No deidentification instructions
+    MIDOM is about mapping out the structure and objects involved in deidentification,
+    not about how to de de-indentification per-se. MIDOM has no opinion on how to
+    clean data elements, pixel data or how to shift dates.
+
+No report/text deidentification
+    The focus is on imaging data, not (semi-)structured reports or free text. This is
+    an important subject that is out of scope here.
