@@ -14,4 +14,5 @@ link to :ref:`objects`
     objects
     components
     spaces
+    comparison
     glossary

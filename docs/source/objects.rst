@@ -87,7 +87,7 @@ A deidentifier can do one of two things with an incoming dataset:
 A deidentifier implements a :ref:`deidentification protocol <objects_protocol>`. Multiple
 deidentifiers can implement the same protocol.
 
-Contrary to a :ref:`Protocol`, a deidentifier is a concrete implementation. meaning it
+Contrary to a :ref:`Protocol`, a deidentifier is a concrete implementation. It
 will have to actually implement a protocol's abstract :ref:`action_codes`. For action
 codes like ``REMOVE`` this is trivial, just remove the dicom element. But for ``CLEAN``
 many different operations might be said to implement 'cleaning'. It is up to the creators
@@ -98,10 +98,10 @@ of a deidentifier to defend the choice for an implementation in a given context.
 
 Protocol
 --------
-Defines what to do with an incoming dataset using four :ref:`components`:
-:ref:`filter`, :ref:`tags`, :ref:`pixel` and :ref:`private`.
+Defines how to handle the deidentification of any incoming dataset using four :ref:`components`:
+:ref:`filter`, :ref:`tags`, :ref:`pixel` and :ref:`private`. It does not say anything
+about implementation, it only prescribes what should be done to each part of a dataset
+and under which circumstances to reject it outright.
 
-The main difference with a :ref:`deidentifier` is that a protocol does not directly
-implement any processing. It only defines what **should** happen
-
+A single protocol can be implemented by many :ref:`deidentifiers <objects_deidentifier>`.
 
