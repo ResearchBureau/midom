@@ -12,6 +12,6 @@ link to :ref:`objects`
 
     intro
     objects
-    glossary
     components
     spaces
+    glossary

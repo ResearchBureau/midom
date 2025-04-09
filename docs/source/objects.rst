@@ -77,10 +77,10 @@ Deidentifier
 A piece of software that takes a :ref:`dataset` and removes :ref:`PHI` from it. It does this
 via four :ref:`components`: :ref:`filter`, :ref:`tags`, :ref:`pixel` and :ref:`private`.
 
-A deidentifier can only do one of two things with an incoming dataset:
+A deidentifier can do one of two things with an incoming dataset:
 
-    1. It rejects the dataset trough triggering one of the :ref:`filters <filter>`
-    2. It applies a transformation to the dataset. The transformation is defined in the
+    1. Reject the dataset trough triggering one of the :ref:`filters <filter>`
+    2. Apply a transformation to the dataset. The transformation is defined in the
        :ref:`tags`, :ref:`pixel` and :ref:`private` components. The observed changes
        in the tags form a :ref:`objects_deltaset`
 

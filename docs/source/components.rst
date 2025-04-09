@@ -2,15 +2,20 @@
 
 Components
 ==========
-The four constituent parts of a :ref:`Protocol`, and by extension of any :ref:`deidentifier`.
-These parts together define the complete handling of any incoming :ref:`dataset`.
+The four constituent parts of a :ref:`Protocol <objects_protocol>`, and by extension of any :ref:`Deidentifier <objects_deidentifier>`.
 
-<add image of parts here>
+.. uml:: diagrams/components.puml
+
+:ref:`tags`, :ref:`filter`, :ref:`pixel` and :ref:`private` together define the complete
+handling of any incoming :ref:`dataset`.
 
 .. _tags:
 
 Tags
 ----
+
+.. uml:: diagrams/components_tags.puml
+
 Tags Processing. Processes all :ref:`DICOM elements <dicom_element>` in a :ref:`dataset`
 except for PixelData and Private tags (see 'excluded elements' below). Tags has a
 different form for protocols and deidentifiers:
@@ -59,13 +64,17 @@ How to define tags processing
 
 Filter
 ------
+
+.. uml:: diagrams/components_filter.puml
+
 Checks any dataset and either accepts it for further processing or rejects it.
-Common reasons for rejection are unknown DICOM with burnt in information, non-conformant
-DICOM, unknown SOPClass.
+Common reasons for rejection are unknown DICOM with :ref:`burnt in information <burnt_in_phi>`,
+non-conformant DICOM or unknown `SOPClass <https://www.dicomlibrary.com/dicom/sop/>`_.
 
 Filter can be applied at multiple times in a deidentification process. Particularly,
 it can reject outright from the start, but can also be called after :ref:`pixel` is
-called, as Pixel can change an
+called, as Pixel can change the tag 'PatientIdentityRemoved' which is a potential input
+to Filter.
 
 The Filter component is solely responsible for rejecting datasets. Not other component
 can do this.
@@ -98,43 +107,91 @@ down in any formal language that implements boolean logic.
 Pixel
 -----
 
+.. uml:: diagrams/components_pixel.puml
+
 Processes all :ref:`Image data elements <imagedata_element>`. So that :ref:`PHI` is removed from
 the images. This includes burnt-in text, implant serial numbers and faces.
 
 The tag `PatientIdentityRemoved <https://dicom.innolitics.com/ciods/parametric-map/patient/00120062>`_ can be
 set by :ref:`pixel` and not touched by :ref:`tags` processing.
 
-Burnt-in vs Dynamic
-...................
-
-.. _burnt_in_info:
-
-**Burnt-in / Static information** is always in the same place in an image. Many DICOM-producing
-modalities, especially in Ultrasound, write PHI like patient name and date of birth into
-the image. For a specific vendor, model and dataset type, this information can always
-be found at the same X-Y coordinates.
-
-.. _
-**Dynamic image PHI** has no pre-determined place. It is not added to the image on purpose.
-Faces and implant serial numbers fall into this category.
-
 
 Syntax
 ......
+The :ref:`protocol <objects_protocol>` Pixel processing definition differs for the two types
+of pixel-based PHI :ref:`burnt_in_phi` and :ref:`dynamc_image_phi`.
+
+For burnt in PHI
+^^^^^^^^^^^^^^^^
+
+For :ref:`burnt_in_phi`, pixel is processing is defined like a `boolean <https://en.wikipedia.org/wiki/Boolean_function>`_
+function using only the tags from the :ref:`image_typ_id_subspace` followed by one or more square pixel regions to black out.
+For example:
+
+.. code-block:: text
+
+        <Modality == "MR"> and <Manufacturer contains "Company A"> ->
+        [0,0,512,30], [0,400,512,30]
+
+The format for a black-out region is ``[top, left, size-x, size-y]`` where ``top``
+and ``left`` are the pixel coordinates of the top left of the region, counting from
+the top left of the image (top left of the image = (0,0)), and ``size-x`` and ``size-y``
+are the size of the box in pixels.
+
+.. note::
+
+    In the future, pixel data processing will probably move to OCR-type techniques where
+    text is recognized in any image regardless of its 'type'. This will make the
+    currently described approach unneeded. Any list of type -> black out region can then
+    still be useful for testing purposes.
 
 
-The means by which :ref:`PHI` is removed from image data is out of scope for MIDOM. A
-common approach is to
+For dynamic image PHI
+^^^^^^^^^^^^^^^^^^^^^
+For :ref:`dynamc_image_phi`, there is no set method or syntax. A
+:ref:`protocol <objects_protocol>` should document whether any dynamic image PHI should
+be removed. This should be a human-readable description. There is no set format for this.
 
-:ref:`deidentifier <objects_deidentifier>`, Filter will be implemented to be
-actually runnable. For a :ref:`protocol <objects_protocol>`
-
-
+For a :ref:`deidentifier <objects_deidentifier>` the description should include a
+description of the methods used, if any. The evidence should make it
 
 
 .. _private:
+
 Private
 -------
 
+.. uml:: diagrams/components_private.puml
+
+:ref:`private_tag` handling is boils down to maintaining a list of 'safe private' tags.
+The DICOM standard allows indicating whether a deidentification method retains safe private
+tags (option *'Rtn. Safe Priv. Opt'* in `table E.1-1 <https://dicom.nema.org/medical/dicom/current/output/chtml/part15/chapter_E.html#table_E.1-1>`_).
+The standard does *not* define which private tags are considered safe. Several
+lists are maintained by several organizations.
+
 Syntax
 ......
+If a :ref:`protocol <objects_protocol>` retains safe private tags, these are defined as
+a list of private tags deemed safe. For example:
+
+.. code-block:: text
+
+    0013,["Company_A"]01
+    0013,["Company_A"]02
+
+    0075,["Company_B"]01
+    0075,["Company_B"]0e
+    0075,["Company_B"]31
+
+Looking at the first example ``0013,["Company_A"]01`` in detail:
+
+    * ``0013`` is the element *group number*
+
+    * ``Company_A`` is the value of the private creator tag
+
+    * ``01`` is the last part of the *element number* (first part is dynamically set by private creator tag)
+
+See :ref:`private_tag` for more information on private tag structure.
+
+
+

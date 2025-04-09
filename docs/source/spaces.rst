@@ -6,6 +6,8 @@ For several MIDOM objects, it is useful to describe the space they inhabit. Insi
 space, all possible objects of a certain type are represented. By defining the space,
 it becomes easier to reason about relationships and operations.
 
+.. _dataset_space:
+
 Dataset Space
 -------------
 All possible :ref:`DICOM datasets <Dataset>`. Each :ref:`DICOM tag <tag>` is a
@@ -28,8 +30,20 @@ infinite in size, only constrained by practical implementation.
 
 The number of permutations is so large as to be practically infinite.
 
-Dataset subspaces
------------------
+
+.. _delta_space:
+
+Delta Space
+-----------
+All possible :ref:`delta sets <delta_set>`.
+
+.. uml:: diagrams/delta_space.puml
+   :caption: Dataset Space contains all possible changes all non-private DICOM tags.
+    Each point is a unique :ref:`delta set <delta_set>`.
+
+
+Subspaces
+---------
 The space created by a subset of all dicom tags.
 
 .. _image_typ_id_subspace:
@@ -44,6 +58,7 @@ used for mapping :ref:`PHI` regions. In code it looks like this
    :language: python
    :pyobject: ImageTypeIDSubspace
 
+
 .. _e1_1_subspace:
 
 E1-1 subspace
@@ -53,15 +68,9 @@ If a tag is in this list, it means the official DICOM deidentification rules hav
 say about how to handle that tag. These 640 tags are the only ones to have an :ref:`action code <action_codes>`
 associated with them.
 
+`Code (python) for the E1-1 subspace is in github <https://github.com/ResearchBureau/midom/blob/main/midom/subspaces.py#L28>`_
 
-
-Delta Space
------------
-All possible :ref:`delta sets <delta_set>`.
-
-.. uml:: diagrams/delta_space.puml
-   :caption: Dataset Space contains all possible changes all non-private DICOM tags.
-    Each point is a unique :ref:`delta set <delta_set>`.
+This subspace can be applied to both :ref:`delta_space` and :ref:`dataset_space`.
 
 .. _action_codes:
 

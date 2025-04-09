@@ -5,7 +5,7 @@ Glossary
 
 Quick overview of all terms used throughout MIDOM
 
-protocol
+Protocol
 ........
     Deidentification Protocol. A full, abstract description of a deidentification
     procedure. Describes what to do with each :ref:`dicom_element`, voxel data, private
@@ -13,7 +13,7 @@ protocol
     of four elements :ref:`tags`, :ref:`filter`, :ref:`pixel`, :ref:`Private`.
     See :ref:`the objects page <objects_protocol>` as well.
 
-deidentifier
+Deidentifier
 ............
     The concrete implementation of a :ref:`objects_protocol`. Takes a :ref:`dataset` and then either
     aplies a transformation to it, or rejects it. Different deidentifiers can implement
@@ -76,25 +76,45 @@ ImageData element
     This list might not be complete. The criteria for what constitutes 'image data' are not
     completely set.
 
+    ImageData elements can contain two types of :ref:`PHI`:
+    :ref:`burnt_in_phi` and :ref:`dynamc_image_phi`
 
+
+.. _burnt_in_phi:
+
+Burnt-in image PHI
+..................
+
+    Burnt-in / Static image PHI is always in the same place in an image. Many DICOM-producing
+    modalities, especially in Ultrasound, write PHI like patient name and date of birth into
+    the image. For a specific vendor, model and dataset type, this information can always
+    be found at the same X-Y coordinates.
+
+.. _dynamc_image_phi:
+
+Dynamic image PHI
+.................
+
+    Dynamic image PHI has no pre-determined place. It is not added to the image on purpose.
+    Faces and implant serial numbers fall into this category.
 
 
 
 .. _action:
 
-action
+Action
 ......
     An intended change to a single :ref:`dicom_element`. The change is expressed as an :ref:`Action code<action_codes>`.
 
 .. _delta:
 
-delta
+Delta
 .....
     An observed change to a single :ref:`dicom_element`. The change is expressed as a :ref:`delta code<spaces_delta_codes>`.
 
 .. _delta_set:
 
-delta set
+Delta set
 ........
     A set of Deltas for a set of distinct :ref:`DICOM elements <dicom_element>`. See the :ref:`objects page<objects_deltaset>`.
 
@@ -110,12 +130,13 @@ PHI
     The `DICOM standard lists more than 400 elements <https://dicom.nema.org/medical/dicom/current/output/chtml/part15/chapter_E.html#table_E.1-1>`_
     for which some kind of processing is required to deidentify.
 
-    In addition to elements, PHI can also be present in burnt-in information, implant serial numbers and faces.
+    In addition to elements, PHI can also be present in image data directly as
+    :ref:`burnt_in_phi` or :ref:`dynamc_image_phi`
 
 
 .. _pixel_data:
 
-pixel data
+Pixel data
 ..........
     A special :ref:`dicom_element` that contains the bytes for the image component
     of a DICOM dataset. This element often take up many times more data than all other
@@ -124,9 +145,12 @@ pixel data
 
 .. _private_tag:
 
-private tag
+Private tag
 ...........
     DICOM private tags are custom data elements that aren't part of the standard
     specification, allowing healthcare organizations to store proprietary or specialized
     information. Private tags enhance flexibility, but are a well known PII leak risk.
     They are handled by the specialized :ref:`private module <private>`.
+
+    More information on private tag structure can be found in the `DICOM standard <https://dicom.nema.org/dicom/2013/output/chtml/part05/sect_7.8.html>`_
+    (very tough read), or in the `pydicom docs <https://pydicom.github.io/pydicom/stable/guides/user/private_data_elements.html>`_ (more understandable).
