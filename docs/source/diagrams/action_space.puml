@@ -1,0 +1,31 @@
+@startuml
+!includeurl  https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!includeurl  https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+'# remove <<system>> above each block
+HIDE_STEREOTYPE()
+
+
+
+Boundary(space, "Action Space", "All possible action sets") {
+    Container(ds1, "AS1") #C09C59
+    Container(ds2, "AS2") #C09C59
+    Container(ds3, "AS3") #C09C59
+    Container(dsX, "etc..") #A8A8A8
+}
+
+ds1 -[hidden]r- ds2
+ds2 -[hidden]r- ds3
+dsX -[hidden]l- ds3
+
+Container(ds1_detail, "ActionSet 1", "", "| tag1 | CLEAN |\n| tag2 | REMOVE |\n etc...") #BEAC8D
+ds1 -- ds1_detail
+
+Container(ds2_detail, "ActionSet 2", "", "| tag1 | CLEAN |\n| tag2 | UID |\n etc...") #BEAC8D
+ds2 -- ds2_detail
+
+Container(ds3_detail, "ActionSet 3", "", "| tag1 | REMOVE |\n| tag2 | EMPTY |\n etc...") #BEAC8D
+ds3 -- ds3_detail
+
+
+@enduml

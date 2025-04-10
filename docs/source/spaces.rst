@@ -38,8 +38,30 @@ Delta Space
 All possible :ref:`delta sets <delta_set>`.
 
 .. uml:: diagrams/delta_space.puml
-   :caption: Dataset Space contains all possible changes all non-private DICOM tags.
+   :caption: Delta Space contains all possible perceived changes to all non-private DICOM tags.
     Each point is a unique :ref:`delta set <delta_set>`.
+
+Size
+....
+Delta space is smaller than :ref:`dataset_space`. Most importantly it is not infinite.
+It compresses all variability down to 5 :ref:`delta_codes`. Which means the total
+number of delta sets is :math:`5^n` with :math:`n` the number of possible elements.
+For 4000+ elements this is still astronomical but *bounded* nonetheless. For the
+611-dimensional :ref:`e1_1_subspace` the size is roughly :math:`e^{427}`.
+
+
+
+
+.. _action_space:
+
+Action Space
+------------
+All possible :ref:`action sets <action_set>`.
+
+.. uml:: diagrams/action_space.puml
+   :caption: Action Space contains all possible changes all non-private DICOM tags.
+    Each point is a unique :ref:`action set <action_set>`.
+
 
 
 Subspaces
@@ -77,10 +99,9 @@ This subspace can be applied to both :ref:`delta_space` and :ref:`dataset_space`
 Action Codes
 ------------
 The codes used in the DICOM standard Attribute and Confidentiality Profiles to denote
-per :ref:`tag` the action that should be taken to deidentify it. All action codes are
-listed in `PS3.15 table E.1-1a <https://dicom.nema.org/medical/dicom/current/output/chtml/part15/chapter_E.html#table_E.1-1a>`_
+per :ref:`tag` the action that should be taken to deidentify it.
 
-Example action codes:
+Main action codes:
 
 +---------------+------------------------------+
 | Code          | Description                  |
@@ -98,10 +119,41 @@ Example action codes:
 | U             | Replace with UID             |
 +---------------+------------------------------+
 
+There are 5 more action codes that are combinations of the 6 main ones above.
+All 11 action codes are listed in `PS3.15 table E.1-1a <https://dicom.nema.org/medical/dicom/current/output/chtml/part15/chapter_E.html#table_E.1-1a>`_.
+
 Action codes are used to describe what *should* happen to a tag. In contrast,
 :ref:`delta codes <spaces_delta_codes>` are used to describe an observable change in a tag value.
 
 .. _spaces_delta_codes:
+
+
+.. _action_set:
+
+Action Set
+----------
+A set of :ref:`action_codes`. All possible codes are contained in :ref:`action_space`.
+Example action set:
+
++----------------------------------+--------+
+| DICOM Tag Name                   | Action |
++==================================+========+
+| Patient's Name                   | REMOVE |
++----------------------------------+--------+
+| Study Date                       | KEEP   |
++----------------------------------+--------+
+| Series Instance UID              | UID    |
++----------------------------------+--------+
+| Accession Number                 | EMPTY  |
++----------------------------------+--------+
+| Referring Physician's Name       | REMOVE |
++----------------------------------+--------+
+| Modality                         | KEEP   |
++----------------------------------+--------+
+
+When characterizing the :ref:`tags` component of a :ref:`objects_protocol` or
+:ref:`objects_deidentifier`, an action set is often called an ``action profile``
+
 
 Delta Codes
 ------------

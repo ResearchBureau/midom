@@ -104,4 +104,3 @@ about implementation, it only prescribes what should be done to each part of a d
 and under which circumstances to reject it outright.
 
 A single protocol can be implemented by many :ref:`deidentifiers <objects_deidentifier>`.
-
