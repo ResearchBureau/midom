@@ -8,13 +8,13 @@ HIDE_STEREOTYPE()
 
 Boundary(protocol, "Protocol / Deidentifier", "Processes dataset") {
     Container(tags, "Tags", "Transforms DICOM\n metadata") #AA98E2
-    Container(filter, "Filter", "Optionally rejects\n dataset") #AA98E2
+    Container(filters, "Filters", "Optionally rejects\n dataset") #AA98E2
     Container(pixel, "Pixel", "Processes\n image data") #AA98E2
     Container(private, "Private", "Processes \n private tags") #AA98E2
 }
 
-tags -[hidden]r- filter
-filter -[hidden]r- pixel
+tags -[hidden]r- filters
+filters -[hidden]r- pixel
 pixel -[hidden]r- private
 
 @enduml

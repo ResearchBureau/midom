@@ -22,7 +22,7 @@ Discussion
 What is a protocol's task?
     - apply a transformation so for each dataset d P(d) does not contain PI
     - Protocol should always define a context, as this determines what is PI
-    - Filter does two things: indicate limits in dataset space (transformation can't
+    - Filters does two things: indicate limits in dataset space (transformation can't
       handle this part) and codify domain knowledge (black list this producer)
 
 

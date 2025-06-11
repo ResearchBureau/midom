@@ -52,6 +52,7 @@ No deidentification instructions
 
     objects
     components
+    documentation
     spaces
     comparison
     glossary

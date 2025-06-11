@@ -8,13 +8,13 @@ HIDE_STEREOTYPE()
 
 Boundary(protocol, "Protocol / Deidentifier") {
     Container(tags, "Tags") #A8A8A8
-    Container(filter, "Filter", ) #A8A8A8
+    Container(filters, "Filters", ) #A8A8A8
     Container(pixel, "Pixel" ) #A8A8A8
     Container(private, "Private", "Processes \n private tags") #AA98E2
 }
 
-tags -[hidden]r- filter
-filter -[hidden]r- pixel
+tags -[hidden]r- filters
+filters -[hidden]r- pixel
 pixel -[hidden]r- private
 
 @enduml

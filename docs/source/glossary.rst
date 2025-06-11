@@ -10,7 +10,7 @@ Protocol
     Deidentification Protocol. A full, abstract description of a deidentification
     procedure. Describes what to do with each :ref:`dicom_element`, voxel data, private
     elements. Also describes which datasets to reject completely. It consists
-    of four elements :ref:`tags`, :ref:`filter`, :ref:`pixel`, :ref:`Private`.
+    of four elements :ref:`tags`, :ref:`filters`, :ref:`pixel`, :ref:`Private`.
     See :ref:`the objects page <objects_protocol>` as well.
 
 Deidentifier
@@ -115,7 +115,7 @@ Delta
 .. _delta_set:
 
 Delta set
-........
+.........
     A set of Deltas for a set of distinct :ref:`DICOM elements <dicom_element>`. See the :ref:`objects page<objects_deltaset>`.
 
 .. _PHI:

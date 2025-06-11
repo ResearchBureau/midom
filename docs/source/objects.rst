@@ -8,10 +8,66 @@ down to changing the right parts of a :ref:`DICOM dataset <objects_dataset>`. Th
 change to each :ref:`DICOM element <dicom_element>` in a single :ref:`dataset <objects_dataset>`
 can be characterized as a :ref:`delta set <objects_deltaset>`. A DeltaSet is effected
 by a :ref:`deidentifier <objects_deidentifier>`. A deidentifier is a concrete
-implementation of a :ref:`Protocol <objects_protocol>`.
+implementation of a :ref:`objects_protocol`.
 
 .. uml:: diagrams/system_context.puml
    :caption: Deidentification objects from abstract (top) to concrete (bottom)
+
+.. _objects_protocol:
+
+Protocol
+--------
+Defines how to handle the deidentification of any incoming dataset using four :ref:`components`:
+:ref:`filters`, :ref:`tags`, :ref:`pixel` and :ref:`private`. It does not say anything
+about implementation, it only prescribes what should be done to each part of a dataset
+and under which circumstances to reject it outright.
+
+A single protocol can be implemented by many :ref:`deidentifiers <objects_deidentifier>`.
+
+.. _objects_deidentifier:
+
+Deidentifier
+------------
+A piece of software that takes a :ref:`dataset` and removes :ref:`PHI` from it. It does this
+via four :ref:`components`: :ref:`filters`, :ref:`tags`, :ref:`pixel` and :ref:`private`.
+
+A deidentifier can do one of two things with an incoming dataset:
+
+    1. Reject the dataset trough triggering one of the :ref:`filters <filters>`
+    2. Apply a transformation to the dataset. The transformation is defined in the
+       :ref:`tags`, :ref:`pixel` and :ref:`private` components. The observed changes
+       in the tags form a :ref:`objects_deltaset`
+
+A deidentifier implements a :ref:`deidentification protocol <objects_protocol>`. Multiple
+deidentifiers can implement the same protocol.
+
+Contrary to a :ref:`objects_protocol`, a deidentifier is a concrete implementation. It
+will have to actually implement a protocol's abstract :ref:`action_codes`. For action
+codes like ``REMOVE`` this is trivial, just remove the dicom element. But for ``CLEAN``
+many different operations might be said to implement 'cleaning'. It is up to the creators
+of a deidentifier to defend the choice for an implementation in a given context.
+
+.. _objects_deltaset:
+
+Deltaset
+--------
+A set of observed changes to dataset elements. See :ref:`the Spaces and Codes page <spaces_delta_codes>` for a full description
+
+Like this:
+
++---------------------------+-----------------+-----------------+-------------+
+| Tag Name                  | Value Before    | Value After     | Delta       |
++===========================+=================+=================+=============+
+| PatientName               | SMITH^JOHN      | Patient01       | CHANGED     |
++---------------------------+-----------------+-----------------+-------------+
+| Modality                  | CT              | CT              | UNCHANGED   |
++---------------------------+-----------------+-----------------+-------------+
+| Study Date                | 20240315        | <tag not found> | REMOVED     |
++---------------------------+-----------------+-----------------+-------------+
+| Manufacturer              | Company A       | <empty>         | EMPTIED     |
++---------------------------+-----------------+-----------------+-------------+
+| De-identification Method  | <tag not found> | deidentifier B  | CREATED     |
++---------------------------+-----------------+-----------------+-------------+
 
 .. _objects_dataset:
 
@@ -45,62 +101,3 @@ For example:
 +------------------+-------------------------------+-----------------------+
 
 DICOM datasets can be stored as files, in databases or in memory.
-
-
-.. _objects_deltaset:
-
-Deltaset
---------
-A set of observed changes to dataset elements. See :ref:`the Spaces and Codes page <spaces_delta_codes>` for a full description
-
-Like this:
-
-+---------------------------+-----------------+-----------------+-------------+
-| Tag Name                  | Value Before    | Value After     | Delta       |
-+===========================+=================+=================+=============+
-| PatientName               | SMITH^JOHN      | Patient01       | CHANGED     |
-+---------------------------+-----------------+-----------------+-------------+
-| Modality                  | CT              | CT              | UNCHANGED   |
-+---------------------------+-----------------+-----------------+-------------+
-| Study Date                | 20240315        | <tag not found> | REMOVED     |
-+---------------------------+-----------------+-----------------+-------------+
-| Manufacturer              | Company A       | <empty>         | EMPTIED     |
-+---------------------------+-----------------+-----------------+-------------+
-| De-identification Method  | <tag not found> | deidentifier B  | CREATED     |
-+---------------------------+-----------------+-----------------+-------------+
-
-
-.. _objects_deidentifier:
-
-Deidentifier
-------------
-A piece of software that takes a :ref:`dataset` and removes :ref:`PHI` from it. It does this
-via four :ref:`components`: :ref:`filter`, :ref:`tags`, :ref:`pixel` and :ref:`private`.
-
-A deidentifier can do one of two things with an incoming dataset:
-
-    1. Reject the dataset trough triggering one of the :ref:`filters <filter>`
-    2. Apply a transformation to the dataset. The transformation is defined in the
-       :ref:`tags`, :ref:`pixel` and :ref:`private` components. The observed changes
-       in the tags form a :ref:`objects_deltaset`
-
-A deidentifier implements a :ref:`deidentification protocol <objects_protocol>`. Multiple
-deidentifiers can implement the same protocol.
-
-Contrary to a :ref:`Protocol`, a deidentifier is a concrete implementation. It
-will have to actually implement a protocol's abstract :ref:`action_codes`. For action
-codes like ``REMOVE`` this is trivial, just remove the dicom element. But for ``CLEAN``
-many different operations might be said to implement 'cleaning'. It is up to the creators
-of a deidentifier to defend the choice for an implementation in a given context.
-
-
-.. _objects_protocol:
-
-Protocol
---------
-Defines how to handle the deidentification of any incoming dataset using four :ref:`components`:
-:ref:`filter`, :ref:`tags`, :ref:`pixel` and :ref:`private`. It does not say anything
-about implementation, it only prescribes what should be done to each part of a dataset
-and under which circumstances to reject it outright.
-
-A single protocol can be implemented by many :ref:`deidentifiers <objects_deidentifier>`.

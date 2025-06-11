@@ -6,7 +6,7 @@ The four constituent parts of a :ref:`Protocol <objects_protocol>`, and by exten
 
 .. uml:: diagrams/components.puml
 
-:ref:`tags`, :ref:`filter`, :ref:`pixel` and :ref:`private` together define the complete
+:ref:`tags`, :ref:`filters`, :ref:`pixel` and :ref:`private` together define the complete
 handling of any incoming :ref:`dataset`.
 
 .. _tags:
@@ -60,24 +60,26 @@ How to define tags processing
     :ref:`action code<action_codes>`.
 
 
-.. _filter:
+.. _filters:
 
-Filter
-------
+Filters
+-------
 
-.. uml:: diagrams/components_filter.puml
+.. uml:: diagrams/components_filters.puml
 
 Checks any dataset and either accepts it for further processing or rejects it.
 Common reasons for rejection are unknown DICOM with :ref:`burnt in information <burnt_in_phi>`,
 non-conformant DICOM or unknown `SOPClass <https://www.dicomlibrary.com/dicom/sop/>`_.
 
-Filter can be applied at multiple times in a deidentification process. Particularly,
+Filters can be applied at multiple times in a deidentification process. Particularly,
 it can reject outright from the start, but can also be called after :ref:`pixel` is
 called, as Pixel can change the tag 'PatientIdentityRemoved' which is a potential input
-to Filter.
+to Filters.
 
-The Filter component is solely responsible for rejecting datasets. Not other component
+The Filters component is solely responsible for rejecting datasets. Not other component
 can do this.
+
+.. _filters_syntax:
 
 Syntax
 ......
@@ -97,8 +99,8 @@ A filter is defined in the form of a `boolean <https://en.wikipedia.org/wiki/Boo
     boolean (yes/no).
 *   The outcome the formula is always ``Reject yes/no``
 
-For a :ref:`deidentifier <objects_deidentifier>`, Filter will be implemented to be
-actually runnable. For a :ref:`protocol <objects_protocol>`, Filter can be written
+For a :ref:`deidentifier <objects_deidentifier>`, Filters will be implemented to be
+actually runnable. For a :ref:`protocol <objects_protocol>`, Filters can be written
 down in any formal language that implements boolean logic.
 
 
@@ -120,6 +122,8 @@ Syntax
 ......
 The :ref:`protocol <objects_protocol>` Pixel processing definition differs for the two types
 of pixel-based PHI :ref:`burnt_in_phi` and :ref:`dynamc_image_phi`.
+
+.. _pixel_syntax_burnt_in:
 
 For burnt in PHI
 ^^^^^^^^^^^^^^^^
@@ -168,6 +172,8 @@ The DICOM standard allows indicating whether a deidentification method retains s
 tags (option *'Rtn. Safe Priv. Opt'* in `table E.1-1 <https://dicom.nema.org/medical/dicom/current/output/chtml/part15/chapter_E.html#table_E.1-1>`_).
 The standard does *not* define which private tags are considered safe. Several
 lists are maintained by several organizations.
+
+.. _safe_private_syntax:
 
 Syntax
 ......

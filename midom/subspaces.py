@@ -4,7 +4,7 @@
 class ImageTypeIDSubspace:
 
         """Tags used to determine what type of DICOM image this is.
-        Used to match burnt-in information locations
+        Used to match burnt-in information locations.
         """
 
         tags = ["BurnedInAnnotation",

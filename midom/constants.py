@@ -1,6 +1,7 @@
 """Implementations of some of the MIDOM constants and objects"""
 from collections import namedtuple
-
+from pydantic.dataclasses import dataclass
+from pydantic import BaseModel
 
 class DeltaCodes:
     """How has a DICOM element changed?"""
@@ -13,8 +14,11 @@ class DeltaCodes:
 
     ALL = {UNCHANGED, CHANGED, REMOVED, EMPTIED, CREATED}
 
+@dataclass(frozen=True)
+class ActionCode:
+    key: str
+    var_name: str
 
-ActionCode = namedtuple("ActionCode", ["key", "var_name"])
 
 class ActionCodes:
     """NEMA specifications from table E1-1. Indicates what to do with each tag"""
@@ -54,4 +58,14 @@ class ActionCodes:
         REMOVE_OR_EMPTY_OR_UID,
     }
 
-    PER_STRING = {x.key: x for x in ALL}
+    PER_KEY = {x.key: x for x in ALL}
+    PER_VAR_NAME = {x.var_name: x for x in ALL}
+
+    @classmethod
+    def from_string(cls, key_or_var_name: str):
+        """I've got a string with either a full name or a key. Which action code is this?"""
+        try:
+            return (cls.PER_KEY | cls.PER_VAR_NAME)[key_or_var_name]
+        except KeyError as e:
+            raise ValueError(f"Unknown action code '{key_or_var_name}'. I "
+                             f"know {','.join([str(x) for x in cls.ALL])}") from e
