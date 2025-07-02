@@ -5,13 +5,10 @@ from midom.identifiers import (PrivateBlockTagIdentifier, PrivateTags, Repeating
 from midom.serialization import ProtocolSerializer
 
 
-
-
 def test_protocol_encoder():
     """Take a sample protocol, serialize it to json, then back to protocol.
     Did it work?
     """
-
 
     protocol = Protocol(
         tags= [(SingleTag("PatientID"), ActionCodes.REMOVE),
