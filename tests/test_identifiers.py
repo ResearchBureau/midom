@@ -1,9 +1,14 @@
 import pytest
-from pydicom.tag import Tag
 from pydicom import Dataset
+from pydicom.tag import Tag
 
-from midom.identifiers import PrivateBlockTagIdentifier, PrivateTags, RepeatingGroup, \
-    RepeatingTag, SingleTag
+from midom.identifiers import (
+    PrivateBlockTagIdentifier,
+    PrivateTags,
+    RepeatingGroup,
+    RepeatingTag,
+    SingleTag,
+)
 from tests.conftest import DatasetFactory
 
 
@@ -12,7 +17,9 @@ def test_identifier_comparison():
     # these should equal each other
     assert SingleTag(tag=Tag("PatientID")) == SingleTag(tag=Tag("PatientID"))
     # You can use any initialization that pydicom.tag.Tag allows, still equal
-    assert SingleTag(tag=Tag(0x0010, 0x0020)) == SingleTag(tag=Tag("PatientID"))
+    assert SingleTag(tag=Tag(0x0010, 0x0020)) == SingleTag(
+        tag=Tag("PatientID")
+    )
 
     assert RepeatingGroup(tag="0010,10xx") == RepeatingGroup(tag="0010,10xx")
 
@@ -32,13 +39,19 @@ def test_identifier_comparison():
 def test_identifier_matching():
 
     assert RepeatingGroup("50xx,xxxx").matches(DatasetFactory(tag="50100040"))
-    assert RepeatingGroup("50xx,xxxx").matches(DatasetFactory(tag=(0x5010, 0x0040)))
+    assert RepeatingGroup("50xx,xxxx").matches(
+        DatasetFactory(tag=(0x5010, 0x0040))
+    )
     assert RepeatingGroup("50xx,xxxx").matches(DatasetFactory(tag="50ef3340"))
-    assert not RepeatingGroup("50xx,xxxx").matches(DatasetFactory(tag="51ef3340"))
+    assert not RepeatingGroup("50xx,xxxx").matches(
+        DatasetFactory(tag="51ef3340")
+    )
 
     assert RepeatingGroup("0010,10xx").matches(DatasetFactory(tag="00101000"))
     assert RepeatingGroup("0010,10xx").matches(DatasetFactory(tag="001010ef"))
-    assert not RepeatingGroup("0010,10xx").matches(DatasetFactory(tag="001011ef"))
+    assert not RepeatingGroup("0010,10xx").matches(
+        DatasetFactory(tag="001011ef")
+    )
 
     assert PrivateTags().matches(DatasetFactory(tag="11ef0010"))
     assert not PrivateTags().matches(DatasetFactory(tag="12ee201f"))
@@ -80,12 +93,14 @@ def test_single_tag_name():
     # unknown tag should just give back code
     assert SingleTag("10b10010").name() == "(10b1,0010)"
 
-@pytest.mark.parametrize("str_in",["PatientID","(0d33,340d)"])
+
+@pytest.mark.parametrize("str_in", ["PatientID", "(0d33,340d)"])
 def test_single_tag(str_in):
     """These strings should be valid for initializing a SingleTag Instance"""
     assert SingleTag(SingleTag(str_in).key())
 
-@pytest.mark.parametrize("str_in",["Blabla","0d33,340d",'1010,100x'])
+
+@pytest.mark.parametrize("str_in", ["Blabla", "0d33,340d", "1010,100x"])
 def test_single_tag_fail(str_in):
     with pytest.raises(ValueError):
         SingleTag(str_in)
@@ -134,11 +149,14 @@ def test_private_block_identifier_tag_parse():
     assert PrivateBlockTagIdentifier("0075,[MyCompany]01").element == 0x01
     assert PrivateBlockTagIdentifier("0075,[MyCompany]01").group == 0x0075
     assert (
-        PrivateBlockTagIdentifier("0075,[MyCompany]01").private_creator == "MyCompany"
+        PrivateBlockTagIdentifier("0075,[MyCompany]01").private_creator
+        == "MyCompany"
     )
 
     assert (
-        PrivateBlockTagIdentifier("0075,[Pushing it $%23987$#*???]01").private_creator
+        PrivateBlockTagIdentifier(
+            "0075,[Pushing it $%23987$#*???]01"
+        ).private_creator
         == "Pushing it $%23987$#*???"
     )
 
@@ -187,13 +205,15 @@ def test_private_block_identifier():
     block = dataset.private_block(0x0075, "RADBOUDUMCANONYMIZER", create=True)
     block.add_new(0x01, "SH", "a_value")
     element = dataset[(0x0075, 0x1001)]
-    assert PrivateBlockTagIdentifier("0075,[RADBOUDUMCANONYMIZER]01").matches(element)
-    assert not PrivateBlockTagIdentifier("0075,[radboudumcanonymizer]01").matches(
+    assert PrivateBlockTagIdentifier("0075,[RADBOUDUMCANONYMIZER]01").matches(
         element
     )
-    assert not PrivateBlockTagIdentifier("0073,[RADBOUDUMCANONYMIZER]00").matches(
-        element
-    )
-    assert not PrivateBlockTagIdentifier("0075,[RADBOUDUMCANONYMIZER]00").matches(
-        element
-    )
+    assert not PrivateBlockTagIdentifier(
+        "0075,[radboudumcanonymizer]01"
+    ).matches(element)
+    assert not PrivateBlockTagIdentifier(
+        "0073,[RADBOUDUMCANONYMIZER]00"
+    ).matches(element)
+    assert not PrivateBlockTagIdentifier(
+        "0075,[RADBOUDUMCANONYMIZER]00"
+    ).matches(element)

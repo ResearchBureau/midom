@@ -12,7 +12,9 @@ from pydicom.tag import BaseTag, Tag
 
 def clean_tag_string(x):
     """Remove common clutter from pydicom Tag.__str__() output"""
-    return x.replace("(", "").replace(",", "").replace(" ", "").replace(")", "")
+    return (
+        x.replace("(", "").replace(",", "").replace(" ", "").replace(")", "")
+    )
 
 
 def get_keyword(tag):
@@ -23,7 +25,7 @@ def get_keyword(tag):
     if keyword:
         return keyword
     else:
-        return str(tag).replace(" ","")
+        return str(tag).replace(" ", "")
 
 
 @total_ordering
@@ -47,13 +49,12 @@ class TagIdentifier(ABC):
     def matches(self, element: DataElement) -> bool:
         """The given element matches this identifier"""
 
-
     @abstractmethod
     def key(self) -> str:
         """String representation of this identifier.
 
-         The following should hold:
-            >>> tag(tag.key()) == tag
+        The following should hold:
+           >>> tag(tag.key()) == tag
         """
 
     @abstractmethod
@@ -87,8 +88,10 @@ class TagIdentifier(ABC):
 class SingleTag(TagIdentifier):
     """Matches a single DICOM tag like (0010,0010) or 'PatientName'"""
 
-    HEX_DICOM_TAG_REGEX = re.compile(r'\((?P<first>[0-9a-fA-F]{4}),(?P<second>[0-9a-fA-F]{4})\)',
-        re.IGNORECASE, )
+    HEX_DICOM_TAG_REGEX = re.compile(
+        r"\((?P<first>[0-9a-fA-F]{4}),(?P<second>[0-9a-fA-F]{4})\)",
+        re.IGNORECASE,
+    )
 
     def __init__(self, tag: Union[BaseTag, str, Tuple[int, int]]):
         """
@@ -104,16 +107,24 @@ class SingleTag(TagIdentifier):
 
         try:
             tag = Tag(tag)
-        except ValueError:
+        except ValueError as e:
             match = self.HEX_DICOM_TAG_REGEX.fullmatch(tag)
             if not match:
-                raise ValueError(f"Could not parse '{tag}' as a DICOM tag")
+                raise ValueError(
+                    f"Could not parse '{tag}' as a DICOM tag"
+                ) from e
             else:
                 try:
-                    tag = Tag((int(match.group('first'),16),
-                                    int(match.group('second'),16)))
+                    tag = Tag(
+                        (
+                            int(match.group("first"), 16),
+                            int(match.group("second"), 16),
+                        )
+                    )
                 except ValueError as e:
-                    raise ValueError(f"Could not parse '{tag}' as a DICOM tag") from e
+                    raise ValueError(
+                        f"Could not parse '{tag}' as a DICOM tag"
+                    ) from e
 
         self.tag = tag
 
@@ -159,8 +170,8 @@ class RepeatingTag:
             self.tag = RepeatingTag.parse_tag_string(tag)
         except ValueError as e:
             raise ValueError(
-                f'Invalid format "{tag}":{e}. Examples of valid tag '
-                f'strings: "(0010,xx10)", "0010,xx10", "0010xx10"'
+                f'Invalid format "{tag}": {e}. Examples of valid tag '
+                f'strings: "(0010, xx10)", "0010, xx10", "0010xx10"'
             ) from e
 
     def __str__(self):
@@ -185,9 +196,11 @@ class RepeatingTag:
             raise ValueError("Tag should be 8 characters long")
         # check whether this is a valid hex string if you discount the x's
         try:
-            int(f'0x{tag.replace("x","0")}', 0)
+            int(f'0x{tag.replace("x", "0")}', 0)
         except ValueError as e:
-            raise ValueError('Non "x" parts of this tag are not hexadecimal') from e
+            raise ValueError(
+                'Non "x" parts of this tag are not hexadecimal'
+            ) from e
 
         return tag
 
@@ -195,7 +208,9 @@ class RepeatingTag:
         """Human-readable name for this repeater tag, from pydicom lists"""
         key = mask_match(self.static_component())
         if key:
-            return RepeatersDictionary[key][4]  # 4th item in tuple is no-space name
+            return RepeatersDictionary[key][
+                4
+            ]  # 4th item in tuple is no-space name
         else:
             return f"Unknown Repeater tag {self.tag}"
 
@@ -209,7 +224,9 @@ class RepeatingTag:
         RepeatingTag('0010,xx10').as_mask() -> 0xffff00ff
         RepeatingTag('50xx,xxxx').as_mask() -> 0xff000000
         """
-        hex_string = f"0x{''.join(map(lambda x: '0' if x=='x' else 'f', self.tag))}"
+        hex_string = (
+            f"0x{''.join(map(lambda x: '0' if x == 'x' else 'f', self.tag))}"
+        )
         return int(hex_string, 0)
 
     def static_component(self) -> int:
@@ -320,7 +337,9 @@ class PrivateBlockTagIdentifier(TagIdentifier):
             The two final bytes of the element. Between 0x00 and 0xFF
         """
         return cls(
-            cls.to_tag(group=group, private_creator=private_creator, element=element)
+            cls.to_tag(
+                group=group, private_creator=private_creator, element=element
+            )
         )
 
     @staticmethod
@@ -336,12 +355,14 @@ class PrivateBlockTagIdentifier(TagIdentifier):
         element: int
             The two final bytes of the element. Between 0x00 and 0xFF
         """
-        return f"{group:04x},[{private_creator}]{element:02x}"
+        return f"{group:04x}, [{private_creator}]{element:02x}"  # noqa #E231
 
     @property
     def tag(self) -> str:
         return self.to_tag(
-            group=self.group, private_creator=self.private_creator, element=self.element
+            group=self.group,
+            private_creator=self.private_creator,
+            element=self.element,
         )
 
     @classmethod
@@ -369,7 +390,7 @@ class PrivateBlockTagIdentifier(TagIdentifier):
 
         match = cls.BLOCK_TAG_REGEX.match(tag)
         if not match:
-            raise ValueError(f'Could not parse "{tag}" as "xxxx,[creator]yy"')
+            raise ValueError(f'Could not parse "{tag}" as "xxxx, [creator]yy"')
         return (
             int(match.group("group"), 16),
             match.group("private_creator"),
@@ -385,7 +406,9 @@ class PrivateBlockTagIdentifier(TagIdentifier):
         """
         if element.tag.group != self.group:
             return False
-        elif element.tag.element & 0x00FF != self.element:  # last 2 bytes match
+        elif (
+            element.tag.element & 0x00FF != self.element
+        ):  # last 2 bytes match
             return False
         elif element.private_creator != self.private_creator:
             return False
@@ -418,8 +441,8 @@ def tag_identifier_from_string(str_in):
     Alternatively, we could add the type to all string representation but that is much
     more clunky to read.
     """
-    #TODO: write this!
-    if str_in.lower() in ['privatetags','privateattributes']:
+    # TODO: write this!
+    if str_in.lower() in ["privatetags", "privateattributes"]:
         return PrivateTags()
     else:
         try:
@@ -432,9 +455,9 @@ def tag_identifier_from_string(str_in):
             pass
         try:
             return RepeatingGroup(str_in)
-        except ValueError:
-            raise ValueError(f"'{str_in}' could not be parsed as PrivateAttributes, "
-                             f"SingleTags, PrivateBlockTagIdentifier or RepeatingGroup. "
-                             f"I really don't know what this is supposed to be")
-
-
+        except ValueError as e:
+            raise ValueError(
+                f"'{str_in}' could not be parsed as PrivateAttributes, "
+                f"SingleTags, PrivateBlockTagIdentifier or RepeatingGroup. "
+                f"I really don't know what this is supposed to be"
+            ) from e

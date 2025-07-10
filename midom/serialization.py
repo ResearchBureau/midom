@@ -1,13 +1,17 @@
 """Loading and saving protocol objects to disk"""
-import json
 from json import JSONEncoder
 from typing import Dict, List, Tuple
 
+from pydantic import BaseModel
+
 from midom.components import BooleanFunction, PixelArea, Protocol
 from midom.constants import ActionCode, ActionCodes
-from midom.identifiers import PrivateBlockTagIdentifier, SingleTag, TagIdentifier, \
-    tag_identifier_from_string
-from pydantic import BaseModel
+from midom.identifiers import (
+    PrivateBlockTagIdentifier,
+    TagIdentifier,
+    tag_identifier_from_string,
+)
+
 
 class ProtocolEncoder(JSONEncoder):
     """Encodes all objects used in midom.components.Protocol to JSON"""
@@ -44,7 +48,8 @@ class SerializedProtocol(BaseModel):
     too complex, too generic and hard to read for this purpose.
     An intermediate structure seems the cleanest here.
     """
-    tags: Dict[str, str]
+
+    tags: Dict[str, Dict[str, str]]
     filters: List[BooleanFunction]
     pixel: List[Tuple[BooleanFunction, PixelArea]]
     private: List[str]
@@ -61,42 +66,46 @@ class ProtocolSerializer:
 
     @staticmethod
     def to_serializable(protocol: Protocol) -> SerializedProtocol:
+        tags = {}
+        for sopclass_id, taglist in protocol.tags.items():
+            tags[sopclass_id] = {
+                identifier.key(): action.var_name
+                for (identifier, action) in taglist
+            }
+
         return SerializedProtocol(
-            tags={identifier.key(): action.var_name for (identifier, action) in protocol.tags},
+            tags=tags,
             filters=protocol.filters,
             pixel=protocol.pixel,
-            private=[identifier.key() for identifier in protocol.private])
+            private=[identifier.key() for identifier in protocol.private],
+        )
 
-    def from_deserialized(self, deserialized: SerializedProtocol) -> Protocol:
+    @staticmethod
+    def from_deserialized(deserialized: SerializedProtocol) -> Protocol:
         """Transform SerializedProtocol to fit Protocol data signature:
 
-        tags: List[Tuple[TagIdentifier, ActionCode]]
+        tags: Dict[str, List[Tuple[TagIdentifier, ActionCode]]]
         filters: List[BooleanFunction]
         pixel: List[Tuple[BooleanFunction, PixelArea]]
         private: List[PrivateBlockTagIdentifier]
         """
-        # TODO: do not cast to SingleTag but cast to any Identifier subtype
-        return Protocol(tags=[(tag_identifier_from_string(x),
-                               ActionCodes.from_string(y)) for x,y in deserialized.tags.items()],
-                        filters=deserialized.filters,
-                        pixel=deserialized.pixel,
-                        private=[PrivateBlockTagIdentifier(x) for x in deserialized.private])
 
+        tags = {}
+        for sop_class_id, tag_list in deserialized.tags.items():
+            tags[sop_class_id] = {
+                (tag_identifier_from_string(x), ActionCodes.from_string(y))
+                for x, y in tag_list.items()
+            }
+        return Protocol(
+            tags=tags,
+            filters=deserialized.filters,
+            pixel=deserialized.pixel,
+            private=[
+                PrivateBlockTagIdentifier(x) for x in deserialized.private
+            ],
+        )
 
     def from_json(self, json_str: str) -> Protocol:
-        return self.from_deserialized(SerializedProtocol.model_validate_json(json_str))
-
-
-class ProtocolDecoder:
-    """Parses the output of ProtocolEncoder"""
-
-    def decode(self, string_in):
-        """Decode json string into a Protocol"""
-        object_in = json.loads(string_in)
-
-
-        test = 1
-
-
-
-
+        return self.from_deserialized(
+            SerializedProtocol.model_validate_json(json_str)
+        )

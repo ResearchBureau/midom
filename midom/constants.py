@@ -1,7 +1,6 @@
 """Implementations of some of the MIDOM constants and objects"""
-from collections import namedtuple
 from pydantic.dataclasses import dataclass
-from pydantic import BaseModel
+
 
 class DeltaCodes:
     """How has a DICOM element changed?"""
@@ -13,6 +12,7 @@ class DeltaCodes:
     CREATED = "CREATED"
 
     ALL = {UNCHANGED, CHANGED, REMOVED, EMPTIED, CREATED}
+
 
 @dataclass(frozen=True)
 class ActionCode:
@@ -42,7 +42,9 @@ class ActionCodes:
     REMOVE_OR_EMPTY_OR_UID = ActionCode(
         "X/Z/U*", "REMOVE_OR_EMPTY_OR_UID"
     )  # X unless Z or U is required
-    UNDEFINED = ActionCode("?", "Undefined")  # not part of ALL below, special case
+    UNDEFINED = ActionCode(
+        "?", "Undefined"
+    )  # not part of ALL below, special case
 
     ALL = {
         DUMMY,
@@ -63,9 +65,13 @@ class ActionCodes:
 
     @classmethod
     def from_string(cls, key_or_var_name: str):
-        """I've got a string with either a full name or a key. Which action code is this?"""
+        """I've got a string with either a full name or a key. Which action
+        code is this?
+        """
         try:
             return (cls.PER_KEY | cls.PER_VAR_NAME)[key_or_var_name]
         except KeyError as e:
-            raise ValueError(f"Unknown action code '{key_or_var_name}'. I "
-                             f"know {','.join([str(x) for x in cls.ALL])}") from e
+            raise ValueError(
+                f"Unknown action code '{key_or_var_name}'. I "
+                f"know {','.join([str(x) for x in cls.ALL])}"
+            ) from e
