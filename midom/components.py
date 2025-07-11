@@ -8,17 +8,41 @@ from midom.identifiers import PrivateBlockTagIdentifier, TagIdentifier
 
 
 class BooleanFunction(BaseModel):
-    criteria: str
+    criterion: str
 
 
 class PixelArea(BaseModel):
-    area: str
+    area: tuple[int,int,int,int]
 
+class TagAction(BaseModel):
+    """Describes the action to take for a single identifier (tag or tag group) and the
+    reason for this action.
+    """
+    model_config = ConfigDict(arbitrary_types_allowed=True)  # for TagIdentifier
 
-class Protocol(BaseModel):
+    identifier: TagIdentifier
+    action: ActionCode
+    justification: str
+
+class Filter(BaseModel):
+    criterion: BooleanFunction
+    justification: str
+
+class PixelOperation(BaseModel):
+    description: str
+    criterion: BooleanFunction
+    areas: List[PixelArea]
+
+class PrivateAllowGroup(BaseModel):
+    # Allow arbitrary for PrivateBlockTagIdentifier
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    tags: Dict[str, List[Tuple[TagIdentifier, ActionCode]]]
-    filters: List[BooleanFunction]
-    pixel: List[Tuple[BooleanFunction, PixelArea]]
-    private: List[PrivateBlockTagIdentifier]
+    elements: List[PrivateBlockTagIdentifier]
+    justification: str
+
+class Protocol(BaseModel):
+
+    tags: Dict[str, List[TagAction]]
+    filters: List[Filter]
+    pixel: List[PixelOperation]
+    private: List[PrivateAllowGroup]

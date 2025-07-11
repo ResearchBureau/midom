@@ -355,7 +355,7 @@ class PrivateBlockTagIdentifier(TagIdentifier):
         element: int
             The two final bytes of the element. Between 0x00 and 0xFF
         """
-        return f"{group:04x}, [{private_creator}]{element:02x}"  # noqa #E231
+        return f"{group:04x},[{private_creator}]{element:02x}"  # noqa #E231
 
     @property
     def tag(self) -> str:
