@@ -108,7 +108,7 @@ class SingleTag(TagIdentifier):
         try:
             tag = Tag(tag)
         except ValueError as e:
-            match = self.HEX_DICOM_TAG_REGEX.fullmatch(tag)
+            match = self.HEX_DICOM_TAG_REGEX.fullmatch(str(tag))
             if not match:
                 raise ValueError(
                     f"Could not parse '{tag}' as a DICOM tag"

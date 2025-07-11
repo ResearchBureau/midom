@@ -91,7 +91,7 @@ def test_single_tag_name():
     # known tag
     assert SingleTag("00100010").name() == "PatientName"
     # unknown tag should just give back code
-    assert SingleTag("10b10010").name() == "(10b1,0010)"
+    assert SingleTag("10b10010").name() == "(10B1,0010)"
 
 
 @pytest.mark.parametrize("str_in", ["PatientID", "(0d33,340d)"])

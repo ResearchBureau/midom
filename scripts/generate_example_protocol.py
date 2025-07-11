@@ -2,8 +2,15 @@
 
 Useful to generate a quick example when developing Protocol format and serialization.
 """
-from midom.components import BooleanFunction, Filter, PixelArea, PixelOperation, \
-    PrivateAllowGroup, Protocol, TagAction
+from midom.components import (
+    BooleanFunction,
+    Filter,
+    PixelArea,
+    PixelOperation,
+    PrivateAllowGroup,
+    Protocol,
+    TagAction,
+)
 from midom.constants import ActionCodes
 from midom.identifiers import (
     PrivateBlockTagIdentifier,
@@ -11,54 +18,98 @@ from midom.identifiers import (
     RepeatingGroup,
     SingleTag,
 )
-from midom.serialization import ProtocolSerializer
 
 
-def a_protocol():
+def a_protocol() -> Protocol:
     return Protocol(
         tags={
             "1.2.840.10008.5.1.4.1.1.2": [
-                TagAction(identifier=SingleTag("PatientID"), action=ActionCodes.REMOVE,
-                          justification=""),
-                TagAction(identifier=SingleTag("Modality"), action=ActionCodes.KEEP,
-                          justification=""),
-                TagAction(identifier=PrivateTags(), action=ActionCodes.REMOVE,
-                          justification=""),
-                TagAction(identifier=PrivateBlockTagIdentifier("112d['company']3f"),
-                          action=ActionCodes.KEEP, justification=""),
-                TagAction(identifier=RepeatingGroup("50xx,xxxx"),
-                          action=ActionCodes.DUMMY, justification=""),
-                TagAction(identifier=SingleTag(0x3313001D), action=ActionCodes.KEEP,
-                          justification="")  # unknown tag
+                TagAction(
+                    identifier=SingleTag("PatientID"),
+                    action=ActionCodes.REMOVE,
+                    justification="",
+                ),
+                TagAction(
+                    identifier=SingleTag("Modality"),
+                    action=ActionCodes.KEEP,
+                    justification="",
+                ),
+                TagAction(
+                    identifier=PrivateTags(),
+                    action=ActionCodes.REMOVE,
+                    justification="",
+                ),
+                TagAction(
+                    identifier=PrivateBlockTagIdentifier("112d['company']3f"),
+                    action=ActionCodes.KEEP,
+                    justification="",
+                ),
+                TagAction(
+                    identifier=RepeatingGroup("50xx,xxxx"),
+                    action=ActionCodes.DUMMY,
+                    justification="",
+                ),
+                TagAction(
+                    identifier=SingleTag(0x3313001D),
+                    action=ActionCodes.KEEP,
+                    justification="",
+                ),  # unknown tag
             ],
             "1.2.840.10008*": [
-                TagAction(identifier=SingleTag("PatientID"), action=ActionCodes.REMOVE,
-                          justification=""),
-                TagAction(identifier=SingleTag("Modality"), action=ActionCodes.REMOVE,
-                          justification=""),
-                TagAction(identifier=PrivateTags(), action=ActionCodes.REMOVE,
-                          justification="")
+                TagAction(
+                    identifier=SingleTag("PatientID"),
+                    action=ActionCodes.REMOVE,
+                    justification="",
+                ),
+                TagAction(
+                    identifier=SingleTag("Modality"),
+                    action=ActionCodes.REMOVE,
+                    justification="",
+                ),
+                TagAction(
+                    identifier=PrivateTags(),
+                    action=ActionCodes.REMOVE,
+                    justification="",
+                ),
             ],
         },
         filters=[
-            Filter(criterion=BooleanFunction(criterion="Modality='US' and BurntInAnnotation=EMPTY"),
-                   justification="important"),
-            Filter(criterion=BooleanFunction(criterion="SOPClassUID=123456"),
-                   justification="this sopclass is bad")
-
+            Filter(
+                criterion=BooleanFunction(
+                    criterion="Modality='US' and BurntInAnnotation=EMPTY"
+                ),
+                justification="important",
+            ),
+            Filter(
+                criterion=BooleanFunction(criterion="SOPClassUID=123456"),
+                justification="this sopclass is bad",
+            ),
         ],
         pixel=[
-            PixelOperation(description="Model this and that",
-                           criterion=BooleanFunction(criterion="Rows=1024 and Columns=720 and Modelname='Toshiba bla'"),
-                           areas=[PixelArea(area=(0,0,720,50))]),
-            PixelOperation(description="Another test operation",
-                           criterion=BooleanFunction(criterion="Rows=1024 and Columns=720 and Modelname='canon bla'"),
-                           areas=[PixelArea(area=(0,0,720,150))])
-
+            PixelOperation(
+                description="Model this and that",
+                criterion=BooleanFunction(
+                    criterion="Rows=1024 and Columns=720 and Modelname='Toshiba bla'"
+                ),
+                areas=[PixelArea(area=(0, 0, 720, 50))],
+            ),
+            PixelOperation(
+                description="Another test operation",
+                criterion=BooleanFunction(
+                    criterion="Rows=1024 and Columns=720 and Modelname='canon bla'"
+                ),
+                areas=[PixelArea(area=(0, 0, 720, 150))],
+            ),
         ],
-        private=[PrivateAllowGroup(justification="Is really safe. See https://a_link_to_dicom_conformance_statement",
-                                   elements=[PrivateBlockTagIdentifier('0075["company"]01'),
-                                             PrivateBlockTagIdentifier('0075["company"]02')])
+        private=[
+            PrivateAllowGroup(
+                justification="Is really safe. See https://a_link_to_dicom_conform"
+                "ance_statement",
+                elements=[
+                    PrivateBlockTagIdentifier('0075["company"]01'),
+                    PrivateBlockTagIdentifier('0075["company"]02'),
+                ],
+            )
         ],
     )
 
@@ -68,6 +119,6 @@ if __name__ == "__main__":
 
     with open(output_file, "w") as f:
 
-        a_protocol = a_protocol()
-        f.write(ProtocolSerializer().to_json(a_protocol))
+        protocol = a_protocol()
+        f.write(protocol.model_dump_json(indent=2))
         print(f"written to {output_file}")
