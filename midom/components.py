@@ -4,7 +4,7 @@ from typing import Dict, List
 from pydantic import BaseModel, ConfigDict, field_validator
 from pydantic.functional_serializers import field_serializer
 
-from midom.constants import ActionCode
+from midom.constants import ActionCode, ActionCodes
 from midom.identifiers import (
     PrivateBlockTagIdentifier,
     TagIdentifier,
@@ -39,11 +39,27 @@ class TagAction(BaseModel):
 
     @field_validator("identifier", mode="before")
     @classmethod
-    def deserialize_tag(cls, value):
+    def deserialize_identifier(cls, value):
         if isinstance(value, TagIdentifier):
             return value
         elif isinstance(value, str):
             return tag_identifier_from_string(value)
+        else:
+            raise ValueError(
+                f'Invalid input data for TagAction.identifier: "{value}"'
+            )
+
+    @field_serializer("action")
+    def serialize_action(self, value, _info):
+        return value.key
+
+    @field_validator("action", mode="before")
+    @classmethod
+    def deserialize_action(cls, value):
+        if isinstance(value, ActionCode):
+            return value
+        elif isinstance(value, str):
+            return ActionCodes.from_string(value)
         else:
             raise ValueError(
                 f'Invalid input data for TagAction.identifier: "{value}"'

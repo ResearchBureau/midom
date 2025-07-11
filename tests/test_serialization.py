@@ -126,5 +126,5 @@ def test_pydantic_serialiazation():
 
 def test_protocol_serialization(a_protocol):
     serialized = a_protocol.model_dump_json(indent=2)
-    reserialized = Protocol.model_validate(serialized)
+    reserialized = Protocol.model_validate_json(serialized)
     assert reserialized  # No exceptions is enough for now
