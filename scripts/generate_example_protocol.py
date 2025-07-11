@@ -13,8 +13,9 @@ from midom.components import (
 )
 from midom.constants import ActionCodes
 from midom.identifiers import (
+    AnyAttribute,
+    PrivateAttributes,
     PrivateBlockTagIdentifier,
-    PrivateTags,
     RepeatingGroup,
     SingleTag,
 )
@@ -35,7 +36,7 @@ def a_protocol() -> Protocol:
                     justification="",
                 ),
                 TagAction(
-                    identifier=PrivateTags(),
+                    identifier=PrivateAttributes(),
                     action=ActionCodes.REMOVE,
                     justification="",
                 ),
@@ -54,6 +55,11 @@ def a_protocol() -> Protocol:
                     action=ActionCodes.KEEP,
                     justification="",
                 ),  # unknown tag
+                TagAction(
+                    identifier=AnyAttribute(),
+                    action=ActionCodes.REMOVE,
+                    justification="Catch all, just remove",
+                ),
             ],
             "1.2.840.10008*": [
                 TagAction(
@@ -67,7 +73,7 @@ def a_protocol() -> Protocol:
                     justification="",
                 ),
                 TagAction(
-                    identifier=PrivateTags(),
+                    identifier=PrivateAttributes(),
                     action=ActionCodes.REMOVE,
                     justification="",
                 ),

@@ -11,8 +11,8 @@ from midom.components import (
 )
 from midom.constants import ActionCodes
 from midom.identifiers import (
+    PrivateAttributes,
     PrivateBlockTagIdentifier,
-    PrivateTags,
     RepeatingGroup,
     SingleTag,
 )
@@ -34,7 +34,7 @@ def a_protocol():
                     justification="",
                 ),
                 TagAction(
-                    identifier=PrivateTags(),
+                    identifier=PrivateAttributes(),
                     action=ActionCodes.REMOVE,
                     justification="",
                 ),
@@ -66,7 +66,7 @@ def a_protocol():
                     justification="",
                 ),
                 TagAction(
-                    identifier=PrivateTags(),
+                    identifier=PrivateAttributes(),
                     action=ActionCodes.REMOVE,
                     justification="",
                 ),

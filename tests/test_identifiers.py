@@ -3,8 +3,8 @@ from pydicom import Dataset
 from pydicom.tag import Tag
 
 from midom.identifiers import (
+    PrivateAttributes,
     PrivateBlockTagIdentifier,
-    PrivateTags,
     RepeatingGroup,
     RepeatingTag,
     SingleTag,
@@ -53,8 +53,8 @@ def test_identifier_matching():
         DatasetFactory(tag="001011ef")
     )
 
-    assert PrivateTags().matches(DatasetFactory(tag="11ef0010"))
-    assert not PrivateTags().matches(DatasetFactory(tag="12ee201f"))
+    assert PrivateAttributes().matches(DatasetFactory(tag="11ef0010"))
+    assert not PrivateAttributes().matches(DatasetFactory(tag="12ee201f"))
 
 
 @pytest.mark.parametrize(
@@ -125,7 +125,7 @@ def test_identifier_number_of_matchable_tags():
     assert SingleTag((0x0010, 0x10EA)).number_of_matchable_tags() == 1
     assert RepeatingGroup("(0010,00xx)").number_of_matchable_tags() == 16 * 16
     assert RepeatingGroup("(00xx,xxxx)").number_of_matchable_tags() == 16**6
-    assert PrivateTags().number_of_matchable_tags() == (16**8) / 2
+    assert PrivateAttributes().number_of_matchable_tags() == (16**8) / 2
 
 
 @pytest.mark.parametrize(

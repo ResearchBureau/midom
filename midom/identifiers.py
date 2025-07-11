@@ -267,7 +267,7 @@ class RepeatingGroup(TagIdentifier):
         return 16 ** self.tag.number_of_matchable_tags()
 
 
-class PrivateTags(TagIdentifier):
+class PrivateAttributes(TagIdentifier):
     """Matches any private DICOM tag. A private tag has an uneven group number"""
 
     def __str__(self):
@@ -286,6 +286,26 @@ class PrivateTags(TagIdentifier):
         # Private tags have an odd group number. So this identifier matches every
         # other possible tag
         return 2147483648  # ((16**8)/2)
+
+
+class AnyAttribute(TagIdentifier):
+    """Any DICOM Attribute. The catch-all default operation. Matches any DICOM tag."""
+
+    def __str__(self):
+        return self.key()
+
+    def matches(self, element: DataElement) -> bool:
+        return True
+
+    def key(self) -> str:
+        return "AnyAttribute"
+
+    def name(self) -> str:
+        return "Any Attribute"
+
+    def number_of_matchable_tags(self) -> int:
+        # Matches over four billion potential tags.
+        return 4294967296  # ((16**8))
 
 
 class PrivateBlockTagIdentifier(TagIdentifier):
@@ -443,7 +463,7 @@ def tag_identifier_from_string(str_in):
     """
     # TODO: write this!
     if str_in.lower() in ["privatetags", "privateattributes"]:
-        return PrivateTags()
+        return PrivateAttributes()
     else:
         try:
             return SingleTag(str_in)
