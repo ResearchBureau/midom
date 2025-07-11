@@ -120,5 +120,6 @@ if __name__ == "__main__":
     with open(output_file, "w") as f:
 
         protocol = a_protocol()
+        protocol.sort_tags()
         f.write(protocol.model_dump_json(indent=2))
         print(f"written to {output_file}")

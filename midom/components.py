@@ -110,9 +110,33 @@ class Protocol(BaseModel):
     """Defines how to handle the deidentification of any incoming dataset. It does
     not say anything about implementation, it only prescribes what should be done
     to each part of a dataset and under which circumstances to reject it outright.
+
+    Overview of elements:
+    tags: Dict[str, List[TagAction]]
+        SOPInstanceUID that can contain wildcards: List of what to do with DICOM tags
+
+    filters: List[Filter]
+        If any of these filters matches, reject the DICOM dataset
+
+    pixel: List[PixelOperation]
+        What to do with pixel data. Where to put black boxes if a rule matches
+
+    private: List[PrivateAllowGroup]
+        Which private tags to allow and why
     """
 
     tags: Dict[str, List[TagAction]]
     filters: List[Filter]
     pixel: List[PixelOperation]
     private: List[PrivateAllowGroup]
+
+    def sort_tags(self):
+        """Sort tag list for each SOPInstanceUID according to generality. The more
+        general, the lower in the list. This means you can take any DICOM tag and
+        try to match each element in the list until one hits.
+        """
+        for key, action_list in self.tags.items():
+            self.tags[key] = sorted(
+                action_list,
+                key=lambda x: x.identifier.number_of_matchable_tags(),
+            )
