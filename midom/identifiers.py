@@ -461,9 +461,10 @@ def tag_identifier_from_string(str_in):
     Alternatively, we could add the type to all string representation but that is much
     more clunky to read.
     """
-    # TODO: write this!
     if str_in.lower() in ["privatetags", "privateattributes"]:
         return PrivateAttributes()
+    elif str_in.lower() in ["anyattribute"]:
+        return AnyAttribute()
     else:
         try:
             return SingleTag(str_in)
