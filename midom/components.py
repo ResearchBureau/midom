@@ -1,6 +1,8 @@
 """Python definition of the parts"""
 from typing import Dict, List
 
+from dicomcriterion import Criterion
+from dicomcriterion.exceptions import CriterionError
 from pydantic import BaseModel, ConfigDict, field_validator
 from pydantic.functional_serializers import field_serializer
 
@@ -63,6 +65,34 @@ class TagAction(BaseModel):
         else:
             raise ValueError(
                 f'Invalid input data for TagAction.identifier: "{value}"'
+            )
+
+
+class CriterionString(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    content: Criterion
+
+    @field_serializer("content")
+    def serialize_identifier(self, value, _info):
+        return value._expression
+
+    @field_validator("content", mode="before")
+    @classmethod
+    def deserialize_tag(cls, value):
+        if isinstance(value, Criterion):
+            return value
+        elif isinstance(value, str):
+            try:
+                return Criterion(value)
+            except CriterionError as e:
+                raise ValueError(
+                    f'Could not parse "{value}" as criterion'
+                ) from e
+        else:
+            raise ValueError(
+                f"Expected Criterion or str as input but "
+                f'found f"{type(value)}" for "{value}'
             )
 
 

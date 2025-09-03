@@ -1,7 +1,9 @@
 import pytest
+from dicomcriterion import Criterion
 
 from midom.components import (
     BooleanFunction,
+    CriterionString,
     Filter,
     PixelArea,
     PixelOperation,
@@ -128,3 +130,24 @@ def test_protocol_serialization(a_protocol):
     serialized = a_protocol.model_dump_json(indent=2)
     reserialized = Protocol.model_validate_json(serialized)
     assert reserialized  # No exceptions is enough for now
+
+
+def test_dicom_criterion_serialization():
+    """A criterion is serialized to JSON as a string, but as an object it has
+    a fully parsed rich inner structure.
+
+    Make sure this all works
+
+    """
+    crit = Criterion('Modality.equals("US") and BurntInAnnotation.exists()')
+    critstr = CriterionString(content=crit)
+    critstr_from_str = CriterionString(
+        content='Modality.equals("US") and BurntInAnnotation.exists()'
+    )
+
+    assert str(critstr) == str(critstr_from_str)
+
+    as_json = critstr.model_dump_json()
+    back_again = CriterionString.model_validate_json(as_json)
+
+    assert as_json == back_again.model_dump_json()

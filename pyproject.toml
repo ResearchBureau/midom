@@ -5,6 +5,7 @@ description = "Concepts and relations to describe the process of DICOM deidentif
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "dicomcriterion>=0.1.0",
     "pydantic>=2.11.5",
     "pydicom>=2.4.4",
     "sphinx>=7.4.7",
