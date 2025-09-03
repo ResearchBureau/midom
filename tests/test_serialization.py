@@ -2,7 +2,6 @@ import pytest
 from dicomcriterion import Criterion
 
 from midom.components import (
-    BooleanFunction,
     CriterionString,
     Filter,
     PixelArea,
@@ -76,28 +75,32 @@ def a_protocol():
         },
         filters=[
             Filter(
-                criterion=BooleanFunction(
-                    criterion="Modality='US' and BurntInAnnotation=EMPTY"
+                criterion=CriterionString(
+                    content="Modality.equals('US') and BurntInAnnotation.equals('No')"
                 ),
                 justification="important",
             ),
             Filter(
-                criterion=BooleanFunction(criterion="SOPClassUID=123456"),
+                criterion=CriterionString(
+                    content="SOPClassUID.equals('123456')"
+                ),
                 justification="this sopclass is bad",
             ),
         ],
         pixel=[
             PixelOperation(
                 description="Model this and that",
-                criterion=BooleanFunction(
-                    criterion="Rows=1024 and Columns=720 and Modelname='Toshiba bla'"
+                criterion=CriterionString(
+                    content="Rows.equals(1024) and Columns.equals(720) and "
+                    "Modelname.equals('Toshiba bla')"
                 ),
                 areas=[PixelArea(area=(0, 0, 720, 50))],
             ),
             PixelOperation(
                 description="Another test operation",
-                criterion=BooleanFunction(
-                    criterion="Rows=1024 and Columns=720 and Modelname='canon bla'"
+                criterion=CriterionString(
+                    content="Rows.equals(1024) and Columns.equals(740) and "
+                    "Modelname.equals('Canon bla')"
                 ),
                 areas=[PixelArea(area=(0, 0, 720, 150))],
             ),

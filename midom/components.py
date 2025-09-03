@@ -14,10 +14,6 @@ from midom.identifiers import (
 )
 
 
-class BooleanFunction(BaseModel):
-    criterion: str
-
-
 class PixelArea(BaseModel):
     area: tuple[int, int, int, int]
 
@@ -87,7 +83,7 @@ class CriterionString(BaseModel):
                 return Criterion(value)
             except CriterionError as e:
                 raise ValueError(
-                    f'Could not parse "{value}" as criterion'
+                    f'Could not parse "{value}" as criterion. Original error: {e}'
                 ) from e
         else:
             raise ValueError(
@@ -97,13 +93,13 @@ class CriterionString(BaseModel):
 
 
 class Filter(BaseModel):
-    criterion: BooleanFunction
+    criterion: CriterionString
     justification: str
 
 
 class PixelOperation(BaseModel):
     description: str
-    criterion: BooleanFunction
+    criterion: CriterionString
     areas: List[PixelArea]
 
 
