@@ -15,11 +15,12 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "coverage>=7.10.6",
-    "factory-boy>=3.3.3",
-    "livereload>=2.7.1",
-    "pytest>=8.3.5",
-    "setuptools>=78.1.0",
+    "coverage",
+    "factory-boy",
+    "livereload",
+    "pytest",
+    "setuptools",
+    "pre-commit"
 ]
 
 [tool.black]
