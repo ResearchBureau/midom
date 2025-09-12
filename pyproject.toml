@@ -19,6 +19,7 @@ dev = [
     "factory-boy",
     "livereload",
     "pytest",
+    "pytest-cov",
     "setuptools",
     "pre-commit"
 ]
