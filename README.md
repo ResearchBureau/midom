@@ -1,5 +1,11 @@
 # MIDOM - Medical Image Deidentification Object Model
 
+[![CI](https://github.com/ResearchBureau/midom/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/ResearchBureau/midom/actions/workflows/build.yml?query=branch%3Amain)
+[![PyPI](https://img.shields.io/pypi/v/dicomtrolley)](https://pypi.org/project/dicomtrolley/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/midom)](https://pypi.org/project/midom)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
+
 A set of concepts and relations to describe the process of DICOM deidentification
 and a structured format for a deidentification protocol.
 
