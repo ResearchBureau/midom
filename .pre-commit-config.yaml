@@ -29,3 +29,4 @@ repos:
         additional_dependencies:
           - pydantic
           - types-requests
+        exclude: docs/.*
