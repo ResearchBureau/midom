@@ -22,5 +22,22 @@ dev = [
     "setuptools>=78.1.0",
 ]
 
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+isolated_build = True
+envlist = py312, py313
+[gh-actions]
+python =
+    3.12: py312
+    3.13: py313
+[testenv]
+allowlist_externals = poetry
+commands =
+    poetry install -v
+    poetry run pytest --cov=tests/ --cov=midom/
+"""
+
+
 [tool.black]
 line-length = 79
