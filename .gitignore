@@ -131,3 +131,6 @@ dmypy.json
 
 # Pycharm
 .idea/
+
+# this is a base libarary, not an application. Don't constrain env
+uv.lock

@@ -1,6 +1,7 @@
 # MIDOM - Medical Image Deidentification Object Model
 
 A set of concepts and relations to describe the process of DICOM deidentification
+and a structured format for a deidentification protocol.
 
 
 ## Why?
@@ -18,8 +19,7 @@ thorough information on _what_ to do to a single dataset, but not on how to reas
 talk about multiple deidentifying processess, their differences, their characteristics.
 
 ## For whom?
-People developing or maintaining image deidentification pipelines. 
-Niche, but existent nonetheless.
+People developing or maintaining image deidentification pipelines.
 
 ## What is it?
 An information model first and foremost. Concept definitions with clear descriptions of
