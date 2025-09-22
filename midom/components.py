@@ -75,7 +75,7 @@ class PrivateElement(BaseModel):
     identifier: Union[PrivateBlockTagIdentifier, str]
     description: str
     value_representation: VR  # any DICOM VR string
-    value_multiplicity: int = 1
+    value_multiplicity: str = "1"
 
     @field_serializer("identifier")
     def serialize_identifier(self, value, _info):

@@ -120,7 +120,7 @@ def a_protocol():
                         identifier='0075["company"]02',
                         description="algorithm settings",
                         value_representation="LO",
-                        value_multiplicity=2,
+                        value_multiplicity="2",
                     ),
                 ],
             )
