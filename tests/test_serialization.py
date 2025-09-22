@@ -114,10 +114,13 @@ def a_protocol():
                     PrivateElement(
                         identifier='0075["company"]01',
                         description="Amount of contrast used",
+                        value_representation="LO",
                     ),
                     PrivateElement(
                         identifier='0075["company"]02',
                         description="algorithm settings",
+                        value_representation="LO",
+                        value_multiplicity=2,
                     ),
                 ],
             )

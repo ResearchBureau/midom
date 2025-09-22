@@ -14,6 +14,7 @@ def test_private_element():
     elem = PrivateElement(
         identifier="0029,[A private creator]10",
         description="A test description",
+        value_representation="LO",
     )
 
     as_json = elem.model_dump_json()

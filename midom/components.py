@@ -5,6 +5,7 @@ from dicomcriterion import Criterion
 from dicomcriterion.exceptions import CriterionError
 from pydantic import BaseModel, ConfigDict, field_validator
 from pydantic.functional_serializers import field_serializer
+from pydicom.valuerep import VR
 
 from midom.constants import ActionCode, ActionCodes
 from midom.identifiers import (
@@ -73,6 +74,8 @@ class PrivateElement(BaseModel):
 
     identifier: Union[PrivateBlockTagIdentifier, str]
     description: str
+    value_representation: VR  # any DICOM VR string
+    value_multiplicity: int = 1
 
     @field_serializer("identifier")
     def serialize_identifier(self, value, _info):
