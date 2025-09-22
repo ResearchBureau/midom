@@ -8,6 +8,7 @@ from midom.components import (
     PixelArea,
     PixelOperation,
     PrivateAllowGroup,
+    PrivateElement,
     Protocol,
     TagAction,
 )
@@ -110,8 +111,14 @@ def a_protocol() -> Protocol:
                 justification="Is really safe. See https://a_link_to_dicom_"
                 "conformance_statement",
                 elements=[
-                    PrivateBlockTagIdentifier('0075["company"]01'),
-                    PrivateBlockTagIdentifier('0075["company"]02'),
+                    PrivateElement(
+                        identifier='0075["company"]01',
+                        description="Amount of contrast used",
+                    ),
+                    PrivateElement(
+                        identifier='0075["company"]02',
+                        description="algorithm settings",
+                    ),
                 ],
             )
         ],

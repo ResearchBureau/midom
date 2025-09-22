@@ -7,6 +7,7 @@ from midom.components import (
     PixelArea,
     PixelOperation,
     PrivateAllowGroup,
+    PrivateElement,
     Protocol,
     TagAction,
 )
@@ -110,8 +111,14 @@ def a_protocol():
                 justification="Is really safe. See https://a_link_to_dicom_"
                 "conformance_statement",
                 elements=[
-                    PrivateBlockTagIdentifier('0075["company"]01'),
-                    PrivateBlockTagIdentifier('0075["company"]02'),
+                    PrivateElement(
+                        identifier='0075["company"]01',
+                        description="Amount of contrast used",
+                    ),
+                    PrivateElement(
+                        identifier='0075["company"]02',
+                        description="algorithm settings",
+                    ),
                 ],
             )
         ],
@@ -132,7 +139,11 @@ def test_pydantic_serialiazation():
 def test_protocol_serialization(a_protocol):
     serialized = a_protocol.model_dump_json(indent=2)
     reserialized = Protocol.model_validate_json(serialized)
-    assert reserialized  # No exceptions is enough for now
+
+    # serialization should not have changed any data
+    assert a_protocol.model_dump_json(
+        indent=2
+    ) == reserialized.model_dump_json(indent=2)
 
 
 def test_dicom_criterion_serialization():

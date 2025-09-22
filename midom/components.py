@@ -1,5 +1,5 @@
 """Python definition of the parts"""
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from dicomcriterion import Criterion
 from dicomcriterion.exceptions import CriterionError
@@ -64,6 +64,33 @@ class TagAction(BaseModel):
             )
 
 
+class PrivateElement(BaseModel):
+    """A private DICOM element with human-readable name."""
+
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True
+    )  # for TagIdentifier
+
+    identifier: Union[PrivateBlockTagIdentifier, str]
+    description: str
+
+    @field_serializer("identifier")
+    def serialize_identifier(self, value, _info):
+        return value.key()
+
+    @field_validator("identifier", mode="before")
+    @classmethod
+    def deserialize_identifier(cls, value):
+        if isinstance(value, TagIdentifier):
+            return value
+        elif isinstance(value, str):
+            return tag_identifier_from_string(value)
+        else:
+            raise ValueError(
+                f'Invalid input data for TagAction.identifier: "{value}"'
+            )
+
+
 class CriterionString(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
@@ -107,29 +134,8 @@ class PrivateAllowGroup(BaseModel):
     # Allow arbitrary for PrivateBlockTagIdentifier
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    elements: List[PrivateBlockTagIdentifier]
+    elements: List[PrivateElement]
     justification: str
-
-    @field_serializer("elements")
-    def serialize_identifier(self, value, _info):
-        return [x.key() for x in value]
-
-    @field_validator("elements", mode="before")
-    @classmethod
-    def deserialize_tag(cls, values):
-        if not isinstance(values, list):
-            ValueError(f"elements should be a list, got {values}")
-        deserialized = []
-        for x in values:
-            if isinstance(x, TagIdentifier):
-                deserialized.append(x)
-            elif isinstance(x, str):
-                deserialized.append(tag_identifier_from_string(x))
-            else:
-                raise ValueError(
-                    f'Invalid input data for TagAction.identifier: "{x}"'
-                )
-        return deserialized
 
 
 class Protocol(BaseModel):
