@@ -110,13 +110,6 @@ output can only be considered correct in the context of a certain :ref:`validati
 .. uml:: diagrams/validation_objects.puml
    :caption: Objects used in the validation of a :ref:`deidentifier <objects_deidentifier>`.
 
-A deidentification process
-
-Use this link:
-https://www.edpb.europa.eu/our-work-tools/documents/public-consultations/2025/guidelines-012025-pseudonymisation_en
-:ref:`deidentifier <validation_objects>`
-
-
 .. _validation_domain:
 
 Domain
