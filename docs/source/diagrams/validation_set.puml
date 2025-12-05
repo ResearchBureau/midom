@@ -1,0 +1,38 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define osaPuml https://raw.githubusercontent.com/Crashedmind/PlantUML-opensecurityarchitecture2-icons/master
+!include osaPuml/Common.puml
+!include osaPuml/User/all.puml
+
+!include <office/Servers/database_server>
+!include <office/Servers/file_server>
+!include <office/Servers/application_server>
+!include <office/Concepts/service_application>
+!include <office/Concepts/firewall>
+
+'# remove <<system>> above each block
+HIDE_STEREOTYPE()
+
+
+Container(domain, "Domain", "", "The type(s) of data and the context in which it is used") #6E97BE
+
+Boundary(validation_set, "Validation Set") {
+    Container(region_sample_set, "Region Sample Set", "", "| ds_A |\n| ds_B |\n| ... |") #6E97BE
+    Container(region_sample_set2, "Region Sample Set", "", "| ds_C |\n| ds_D |\n| ... |") #6E97BE
+    Container(region_sample_set3, "Region Sample Set", "", "| ds_E |\n| ds_F |\n| ds_G |\n| ... |") #6E97BE
+    Container(deidentification_reference, "Deidentification Reference", "", "Shows desired\nprocessing result\n\n| ds_A | -> ds_A` |\n| ds_B | -> ds_B` |\n| ds_C | -> ds_C` |\n| ds_D | -> ds_D` |\n| ds_E | -> Reject |\n| ds_F | -> Reject |\n| ... | ... |")
+
+    region_sample_set <-r- deidentification_reference : "contains"
+    region_sample_set2 <-r- deidentification_reference : "contains"
+    region_sample_set3 <-r- deidentification_reference : "contains"
+
+    region_sample_set -[hidden]-> region_sample_set2
+    region_sample_set2 -[hidden]-> region_sample_set3
+}
+
+domain <-[dotted]- region_sample_set  : "Samples"
+domain <-[dotted]- region_sample_set2  : "Samples"
+domain <-[dotted]- region_sample_set3  : "Samples"
+
+
+@enduml
