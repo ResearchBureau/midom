@@ -1,7 +1,8 @@
 """Classes and functions having to do with checking deidentifiers against a
 reference
 """
-from typing import Iterator, List, Tuple, Union
+from itertools import chain
+from typing import Iterable, Iterator, List, Tuple, Union
 
 from pydantic import BaseModel
 from pydicom import Dataset
@@ -14,19 +15,21 @@ class DatasetRejectedError(Exception):
 
 
 class Domain(BaseModel):
-    """The context in which a protocol is considered to be usable"""
+    """The context in which a protocol is considered to be effective for protecting
+    confidentiality
+    """
 
     description: str
 
 
 class RegionSampleSet(BaseModel):
     """A collection of DICOM datasets from a common region in dataset space.
-    For example 'datasets from hospital A' or 'Ultrasound datasets'
+    For example, 'datasets from hospital A' or 'Ultrasound datasets'.
     """
 
     description: str
 
-    def all_samples(self) -> Iterator[Dataset]:
+    def all_samples(self) -> Iterable[Dataset]:
         """All DICOM samples contained in this Region Sample Set"""
         raise NotImplementedError("Implemented in child classes")
 
@@ -58,20 +61,26 @@ class DatasetRejected:
 
 class ValidationSet(BaseModel):
     """An example of 'correct' deidentification of a set of DICOM samples
-    reference should ideally contain a valid result for each sample.
+    reference should contain a valid result for each sample.
     """
 
-    samples: List[RegionSampleSet]
+    sample_sets: List[RegionSampleSet]
     reference: DeidentificationReference
 
-    def get_reference(self, ds: Dataset):
+    def get_reference(self, ds: Dataset) -> Union[DatasetRejected, Dataset]:
+        """Find the correct deidentification result for the given dataset."""
         try:
-            self.reference.get_reference(ds)
+            return self.reference.get_reference(ds)
         except DatasetRejectedError:
-            return DatasetRejected
+            return DatasetRejected()
 
-    def validation_items(
+    def items(
         self,
     ) -> Iterator[Tuple[Dataset, Union[DatasetRejected, Dataset]]]:
-        for sample in zip(x.all_samples() for x in self.samples):
-            yield sample, self.get_reference(sample)
+        """All tuples dataset -> correct deidentification result
+
+        Translates errors
+        """
+        for sample_set in chain(self.sample_sets):
+            for sample in sample_set.all_samples():
+                yield sample, self.get_reference(sample)

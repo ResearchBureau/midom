@@ -55,4 +55,5 @@ No deidentification instructions
     documentation
     spaces
     comparison
+    design
     glossary

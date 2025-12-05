@@ -1,0 +1,22 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define osaPuml https://raw.githubusercontent.com/Crashedmind/PlantUML-opensecurityarchitecture2-icons/master
+!include osaPuml/Common.puml
+!include osaPuml/User/all.puml
+
+!include <office/Servers/database_server>
+!include <office/Servers/file_server>
+!include <office/Servers/application_server>
+!include <office/Concepts/service_application>
+!include <office/Concepts/firewall>
+
+'# remove <<system>> above each block
+HIDE_STEREOTYPE()
+
+Container(domain, "Domain", "", "The type(s) of data and the context in which it is used") #6E97BE
+Container(protocol, "Protocol", "", "Structured description of how to process imaging data") #6E97BE
+
+domain <- protocol  : "Policy decision:\nA protocol is suitable for"
+
+
+@enduml
