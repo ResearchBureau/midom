@@ -167,11 +167,15 @@ class Protocol(BaseModel):
 
     def sort_tags(self):
         """Sort tag list for each SOPInstanceUID according to generality. The more
-        general, the lower in the list. This means you can take any DICOM tag and
-        try to match each element in the list until one hits.
+        general, the lower in the list. See midom
+        TagIdentifier.number_of_matchable_tags()
+        for more info. Within tags of the same generality, sort by DICOM tag number.
         """
         for key, action_list in self.tags.items():
             self.tags[key] = sorted(
                 action_list,
-                key=lambda x: x.identifier.number_of_matchable_tags(),
+                key=lambda x: (
+                    x.identifier.number_of_matchable_tags(),
+                    str(x.identifier),
+                ),
             )
