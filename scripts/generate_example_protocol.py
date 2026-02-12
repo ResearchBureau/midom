@@ -5,8 +5,8 @@ Useful to generate a quick example when developing Protocol format and serializa
 from midom.components import (
     CriterionString,
     Filter,
+    PILocation,
     PixelArea,
-    PixelOperation,
     PrivateAllowGroup,
     PrivateElement,
     Protocol,
@@ -89,21 +89,21 @@ def a_protocol() -> Protocol:
             ),
         ],
         pixel=[
-            PixelOperation(
+            PILocation(
                 description="Model this and that",
                 criterion=CriterionString(
                     content="Rows.equals(1024) and Columns.equals(720) and "
                     "Modelname.equals('Toshiba bla')"
                 ),
-                areas=[PixelArea(area=(0, 0, 720, 50))],
+                areas=[PixelArea(x=0, y=0, width=720, height=50)],
             ),
-            PixelOperation(
+            PILocation(
                 description="Another test operation",
                 criterion=CriterionString(
                     content="Rows.equals(1024) and Columns.equals(740) and "
                     "Modelname.equals('Canon bla')"
                 ),
-                areas=[PixelArea(area=(0, 0, 720, 150))],
+                areas=[PixelArea(x=10, y=5, width=700, height=150)],
             ),
         ],
         private=[

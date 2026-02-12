@@ -132,7 +132,13 @@ class Filter(BaseModel):
     justification: str
 
 
-class PixelOperation(BaseModel):
+class PILocation(BaseModel):
+    """Holds the location of burnt-in patient information.
+
+    If the criterion matches a dataset, then the burnt-in information is in the
+    given areas
+    """
+
     description: str
     criterion: CriterionString
     areas: List[PixelArea]
@@ -158,7 +164,7 @@ class Protocol(BaseModel):
     filters: List[Filter]
         If any of these filters matches, reject the DICOM dataset
 
-    pixel: List[PixelOperation]
+    pixel: List[PILocation]
         What to do with pixel data. Where to put black boxes if a rule matches
 
     private: List[PrivateAllowGroup]
@@ -167,7 +173,7 @@ class Protocol(BaseModel):
 
     tags: Dict[str, List[TagAction]]
     filters: List[Filter]
-    pixel: List[PixelOperation]
+    pixel: List[PILocation]
     private: List[PrivateAllowGroup]
 
     def sort_tags(self):

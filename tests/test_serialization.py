@@ -4,8 +4,8 @@ from dicomcriterion import Criterion
 from midom.components import (
     CriterionString,
     Filter,
+    PILocation,
     PixelArea,
-    PixelOperation,
     PrivateAllowGroup,
     PrivateElement,
     Protocol,
@@ -89,7 +89,7 @@ def a_protocol():
             ),
         ],
         pixel=[
-            PixelOperation(
+            PILocation(
                 description="Model this and that",
                 criterion=CriterionString(
                     content="Rows.equals(1024) and Columns.equals(720) and "
@@ -97,7 +97,7 @@ def a_protocol():
                 ),
                 areas=[PixelArea(x=0, y=0, width=720, height=30)],
             ),
-            PixelOperation(
+            PILocation(
                 description="Another test operation",
                 criterion=CriterionString(
                     content="Rows.equals(1024) and Columns.equals(740) and "
