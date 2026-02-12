@@ -16,7 +16,12 @@ from midom.identifiers import (
 
 
 class PixelArea(BaseModel):
-    area: tuple[int, int, int, int]
+    """A rectangle in 2D. Pixel coordinates [leftmost_X,upper_Y,width,height]"""
+
+    x: int  # of left edge, pixel
+    y: int  # of upper edge, pixel
+    width: int  # in pixels
+    height: int  # in pixels
 
 
 class TagAction(BaseModel):

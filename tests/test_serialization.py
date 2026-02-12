@@ -95,7 +95,7 @@ def a_protocol():
                     content="Rows.equals(1024) and Columns.equals(720) and "
                     "Modelname.equals('Toshiba bla')"
                 ),
-                areas=[PixelArea(area=(0, 0, 720, 50))],
+                areas=[PixelArea(x=0, y=0, width=720, height=30)],
             ),
             PixelOperation(
                 description="Another test operation",
@@ -103,7 +103,7 @@ def a_protocol():
                     content="Rows.equals(1024) and Columns.equals(740) and "
                     "Modelname.equals('Canon bla')"
                 ),
-                areas=[PixelArea(area=(0, 0, 720, 150))],
+                areas=[PixelArea(x=10, y=5, width=700, height=150)],
             ),
         ],
         private=[
