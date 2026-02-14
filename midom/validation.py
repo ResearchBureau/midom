@@ -1,8 +1,9 @@
 """Classes and functions having to do with checking deidentifiers against a
 reference
 """
+from copy import deepcopy
 from itertools import chain
-from typing import Iterable, Iterator, List, Tuple, Union
+from typing import ClassVar, Iterable, Iterator, List, Tuple, Union
 
 from pydantic import BaseModel
 from pydicom import Dataset
@@ -10,6 +11,12 @@ from pydicom import Dataset
 
 class DatasetRejectedError(Exception):
     """The input dataset was rejected by the deidentifier"""
+
+    pass
+
+
+class ValidationFailedError(Exception):
+    """A Deidentifiers result does not conform to a reference"""
 
     pass
 
@@ -84,3 +91,78 @@ class ValidationSet(BaseModel):
         for sample_set in chain(self.sample_sets):
             for sample in sample_set.all_samples():
                 yield sample, self.get_reference(sample)
+
+
+def deepcopy_fix(dataset):
+    """Works around a pydicom 3.0.1 bug https://github.com/pydicom/pydicom/issues/2294
+    Fixed in pydicom main but not released. Remove this method and use regular
+    deepcopy when a release is available
+    """
+    dataset_copy = deepcopy(dataset)
+    for key in dataset_copy._private_blocks.keys():
+        dataset_copy._private_blocks[key].dataset = dataset_copy
+    return dataset_copy
+
+
+class Deidentifier:
+    """Something that has a deidentify() method that processes pydicom datasets"""
+
+    def deidentify(self, dataset: Dataset) -> Dataset:
+        raise NotImplementedError()
+
+
+class Check:
+    """Checks whether a deidentifier results corresponds to a reference
+
+    Base class for child classes that can fill in what 'corresponds to a reference'
+    means. Some examples:
+    * Result is as strict or stricter
+    * Result transformation seems identical
+    * Private tags that should be kept are kept
+    * Burnt-in image data was correctly removed
+
+    A better name for this would possibly be 'Criterion' but that name is taken.
+    """
+
+    description: ClassVar[str] = ""  # What does this check do? Human-readable
+
+    def run(self, original: Dataset, reference: Dataset, result: Dataset):
+        """Check whether result conforms to the reference result
+
+        Raises
+        ------
+        ValidationFailedError
+            If result does not conform.
+        """
+        raise NotImplementedError
+
+
+class Validator:
+    def __init__(self, checks: List[Check]):
+        """Can check whether a deidentifier's operation corresponds to a reference.
+
+        Parameters
+        ----------
+        checks:
+            All check to perform on each deidentification result
+        """
+        self.checks = checks
+
+    def validate(
+        self, deidentifier: Deidentifier, validation_set: ValidationSet
+    ):
+        """Check whether a deidentifier conforms to each example in a ValidationSet
+
+        Raises
+        ------
+        ValidationFailedError
+            If any deidentifier result does not conform to the reference
+        """
+
+        for original, reference in validation_set.items():
+            for check in self.checks:
+                check.run(
+                    original,
+                    reference,
+                    deidentifier.deidentify(deepcopy_fix(original)),
+                )
