@@ -9,7 +9,7 @@ from midom.validation import (
     DeidentificationReference,
     Domain,
     RegionSampleSet,
-    ValidationSet,
+    RegionValidationSet,
 )
 from tests.factories import quick_dataset
 
@@ -54,7 +54,7 @@ def test_validation():
     reference = InMemoryDeidentificationReference(
         description="A test reference"
     )
-    validation_set = ValidationSet(
+    validation_set = RegionValidationSet(
         sample_sets=[sample_set], reference=reference
     )
 

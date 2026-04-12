@@ -5,7 +5,7 @@ from copy import deepcopy
 from itertools import chain
 from typing import ClassVar, Iterable, Iterator, List, Tuple, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from pydicom import Dataset
 
 
@@ -19,6 +19,10 @@ class ValidationFailedError(Exception):
     """A Deidentifiers result does not conform to a reference"""
 
     pass
+
+
+class CheckExecutionError(Exception):
+    """A check could not perform its function for some reason"""
 
 
 class Domain(BaseModel):
@@ -71,6 +75,34 @@ class ValidationSet(BaseModel):
     reference should contain a valid result for each sample.
     """
 
+    # Needed to allow pydicom.Dataset fields
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    def items(
+        self,
+    ) -> Iterator[Tuple[Dataset, Union[DatasetRejected, Dataset]]]:
+        """Yields pairs of (dataset -> correct deidentification result example)
+
+        Returns
+        -------
+        Tuple[Dataset, Dataset]
+            If the example dataset should be deidentified
+
+        Tuple[Dataset, DatasetRejected]
+            If the correct response should be to reject the example dataset
+
+        """
+        raise NotImplementedError("Implemented in child classes")
+
+
+class RegionValidationSet(BaseModel):
+    """'correct' deidentification for one or more Region sample sets.
+
+    Allows for easy re-use of region sample sets in different validation sets,
+    for example 'strict deidentification' of region set 'Our hospital sample' and
+    'permissive deidentification' for the same region set.
+    """
+
     sample_sets: List[RegionSampleSet]
     reference: DeidentificationReference
 
@@ -81,6 +113,11 @@ class ValidationSet(BaseModel):
         except DatasetRejectedError:
             return DatasetRejected()
 
+    def samples(self) -> Iterator[Dataset]:
+        """All sample Datasets contained in this ValidationSet. Could be infinite"""
+        for sample_set in chain(self.sample_sets):
+            yield from sample_set.all_samples()
+
     def items(
         self,
     ) -> Iterator[Tuple[Dataset, Union[DatasetRejected, Dataset]]]:
@@ -88,9 +125,8 @@ class ValidationSet(BaseModel):
 
         Translates errors
         """
-        for sample_set in chain(self.sample_sets):
-            for sample in sample_set.all_samples():
-                yield sample, self.get_reference(sample)
+        for sample in self.samples():
+            yield sample, self.get_reference(sample)
 
 
 def deepcopy_fix(dataset):
@@ -133,8 +169,11 @@ class Check:
         ------
         ValidationFailedError
             If result does not conform.
+        CheckExecutionError
+            If this check cannot be run on the given input. Missing data or any other
+            issue.
         """
-        raise NotImplementedError
+        raise NotImplementedError("Implemented in child classes")
 
 
 class Validator:
