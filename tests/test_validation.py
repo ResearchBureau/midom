@@ -1,5 +1,7 @@
 from typing import Iterable, List
 
+from dicomgenerator.generators import quick_dataset
+from dicomgenerator.pixeldata import draw_noise
 from pydantic import ConfigDict
 from pydicom import Dataset
 
@@ -13,7 +15,6 @@ from midom.validation import (
     RegionValidationSet,
     SampleDataset,
 )
-from tests.factories import quick_dataset
 
 
 class InMemorySampleSet(RegionSampleSet):
@@ -87,7 +88,11 @@ def test_sample_dataset_pixeldata_serialization():
     """Pixeldata can be serialized but will easily be huge. Offer guide rails"""
     sample = SampleDataset(
         uid="vna/1234/554/234",
-        dataset=quick_dataset(Modality="CT", AccessionNumber="1234"),
+        dataset=quick_dataset(
+            Modality="CT",
+            AccessionNumber="1234",
+            PixelData=draw_noise(201, 301, "uint8"),
+        ),
         pi_regions=[PixelArea(x=10, y=8, width=100, height=40)],
     )
 

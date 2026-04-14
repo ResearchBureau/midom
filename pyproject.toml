@@ -30,7 +30,8 @@ dev = [
     "pytest",
     "pytest-cov",
     "setuptools",
-    "pre-commit"
+    "pre-commit",
+    "dicomgenerator==0.11",
 ]
 
 [tool.black]
