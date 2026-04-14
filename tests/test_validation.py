@@ -3,6 +3,7 @@ from typing import Iterable, List
 from pydantic import ConfigDict
 from pydicom import Dataset
 
+from midom.components import PixelArea
 from midom.validation import (
     DatasetRejected,
     DatasetRejectedError,
@@ -10,6 +11,7 @@ from midom.validation import (
     Domain,
     RegionSampleSet,
     RegionValidationSet,
+    SampleDataset,
 )
 from tests.factories import quick_dataset
 
@@ -62,3 +64,20 @@ def test_validation():
 
     assert len(items) == 3
     assert type(items[1][1]) == DatasetRejected  # item should be
+
+
+def test_sample_dataset_serialization():
+    """A SampleDataset should be writable and loadable as JSON"""
+    sample = SampleDataset(
+        uid="vna/1234/554/234",
+        dataset=quick_dataset(Modality="CT", AccessionNumber="1234"),
+        pi_regions=[PixelArea(x=10, y=8, width=100, height=40)],
+    )
+
+    serialized = sample.model_dump_json(indent=2)
+    reserialized = SampleDataset.model_validate_json(serialized)
+    assert reserialized.dataset.Modality == sample.dataset.Modality
+    assert (
+        reserialized.dataset.AccessionNumber == sample.dataset.AccessionNumber
+    )
+    assert reserialized.pi_regions == sample.pi_regions

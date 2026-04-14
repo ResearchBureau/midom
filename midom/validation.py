@@ -3,10 +3,12 @@ reference
 """
 from copy import deepcopy
 from itertools import chain
-from typing import ClassVar, Iterable, Iterator, List, Tuple, Union
+from typing import Any, ClassVar, Iterable, Iterator, List, Tuple, Union
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, field_serializer, field_validator
 from pydicom import Dataset
+
+from midom.components import PixelArea
 
 
 class DatasetRejectedError(Exception):
@@ -205,3 +207,33 @@ class Validator:
                     reference,
                     deidentifier.deidentify(deepcopy_fix(original)),
                 )
+
+
+class SampleDataset(BaseModel):
+    """A DICOM dataset with optional PI regions
+
+    For saving example dicom to disk
+    """
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)  # for Dataset
+
+    uid: str
+    dataset: Dataset
+    pi_regions: List[PixelArea]
+
+    @field_serializer("dataset")
+    def serialize_dataset(self, ds: Dataset) -> dict:
+        """Serialize pydicom Dataset to a JSON-compatible dict."""
+        return ds.to_json_dict()
+
+    @field_validator("dataset", mode="before")
+    @classmethod
+    def deserialize_dataset(cls, v: Any) -> Dataset:
+        """Deserialize a dict/string back into a pydicom Dataset."""
+        if isinstance(v, Dataset):
+            return v
+        if isinstance(v, str):
+            return Dataset.from_json(v)
+        if isinstance(v, dict):
+            return Dataset.from_json(v)
+        raise ValueError(f"Cannot deserialize Dataset from type {type(v)}")
