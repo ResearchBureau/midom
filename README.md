@@ -11,28 +11,33 @@ and a structured format for a deidentification protocol.
 
 
 ## Why?
-For projects related to DICOM deidentification, I'm running into the problem of not 
-having the right words. I keep inventing terms, coming up with long-winded descriptions
+To use with projects related to DICOM deidentification. I'm running into the problem of not 
+having the right words. I keep inventing terms, coming up with long-winded descriptions.
 There is a lack of conceptual clarity. Lack of clarity causes:
 * misunderstandings
 * Ineffective communication
 * misguided programming efforts
 * wasted time generally.
 
-The DICOM standard does not have enough detail. 
+The DICOM standard is not sufficient. 
 [DICOM PS3 E-E1](https://dicom.nema.org/medical/dicom/current/output/chtml/part15/chapter_E.html#sect_E.1)  gives 
 thorough information on _what_ to do to a single dataset, but not on how to reason or
 talk about multiple deidentifying processess, their differences, their characteristics.
 
 ## For whom?
-People developing or maintaining image deidentification pipelines.
+People developing or maintaining image deidentification software. Either full pipelines 
+or separate parts.
 
 ## What is it?
 An information model first and foremost. Concept definitions with clear descriptions of
-their relations. There might be python code to define constants, transformations between objects maybe.
+their relations. To clearly express these, a structured language is required. Python 
+has been chosen for this, but it should be possible to express MIDOM concepts in 
+any structured language.
 
 ## What is it not?
-Anything that does any actual image processing. No loading of DICOM files anywhere.
+* No image processing. Anything that does any actual image processing. No loading of DICOM files anywhere.
+* Not married to python. MIDOM uses pydantic for clean, serializable object definitions, pydicom for clean dicom file access and dicomcriterion to encode boolean expressions for DICOM datasets. Beyond that I will try to keep the dependencies to a minimum. This is the ambition. Time will tell whether this is realistic.
+
 
 ## For docs editors
 ### Render html docs
