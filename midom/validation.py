@@ -175,6 +175,28 @@ class Check:
         """
         raise NotImplementedError("Implemented in child classes")
 
+    def apply(
+        self, original: Dataset, reference: Dataset, deidentifier: Deidentifier
+    ):
+        """Check whether deidentiers processing of original corresponds to
+        deidentifier. Different way of calling run(). Makes downstream usage
+        simpler because you don't need to create a ReferenceSet for checking
+        a dataset.
+
+        Raises
+        ------
+        ValidationFailedError
+            If result does not conform.
+        CheckExecutionError
+            If this check cannot be run on the given input. Missing data or any other
+            issue.
+        """
+        self.run(
+            original,
+            reference,
+            deidentifier.deidentify(deepcopy_fix(original)),
+        )
+
 
 class Validator:
     def __init__(self, checks: List[Check]):
