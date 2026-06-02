@@ -178,8 +178,8 @@ class Check:
     def apply(
         self, original: Dataset, reference: Dataset, deidentifier: Deidentifier
     ):
-        """Check whether deidentiers processing of original corresponds to
-        deidentifier. Different way of calling run(). Makes downstream usage
+        """Check whether deidentifier's processing of original corresponds to
+        the given reference. Different way of calling run(). Makes downstream usage
         simpler because you don't need to create a ReferenceSet for checking
         a dataset.
 
