@@ -1,4 +1,7 @@
 # History
+## v0.5.0 (02-06-26)
+* Adds initial support for deidentifier validation. Serializable Datasets with PI locations, pixeldata processing
+
 ## v0.4.0 (05-12-25)
 * Adds validation base classes and documentation
 
