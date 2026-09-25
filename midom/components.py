@@ -171,10 +171,10 @@ class Protocol(BaseModel):
         Which private tags to allow and why
     """
 
-    tags: Dict[str, List[TagAction]]
-    filters: List[Filter]
-    pixel: List[PILocation]
-    private: List[PrivateAllowGroup]
+    tags: Dict[str, List[TagAction]] = {}
+    filters: List[Filter] = []
+    pixel: List[PILocation] = []
+    private: List[PrivateAllowGroup] = []
 
     def sort_tags(self):
         """Sort tag list for each SOPInstanceUID according to generality. The more

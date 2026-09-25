@@ -1,7 +1,7 @@
 import pytest
 from pydantic_core._pydantic_core import ValidationError
 
-from midom.components import PrivateElement
+from midom.components import PrivateElement, Protocol
 
 
 def test_private_element():
@@ -29,3 +29,10 @@ def test_loading_non_private(identifier):
     """You can only use private tag identifiers in a private element."""
     with pytest.raises(ValidationError):
         _ = PrivateElement(identifier=identifier, description="")
+
+
+def test_default_init():
+    """You should be able to create an empty protocol"""
+
+    protocol = Protocol()
+    assert protocol
