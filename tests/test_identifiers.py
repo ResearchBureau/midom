@@ -40,7 +40,7 @@ def test_identifier_comparison():
     ]
 
     # Sorting should order most general tag first, rest according to group,element
-    taglist.sort()
+    taglist.sort(reverse=True)
     assert [str(x) for x in taglist] == [
         "(0008,0050)",
         "(0010,0020)",

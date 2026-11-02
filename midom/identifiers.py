@@ -141,7 +141,7 @@ class SingleTag(TagIdentifier):
 
     def key(self) -> str:
         """Return a valid Tag() string argument"""
-        return self.name()
+        return str(self)
 
     def number_of_matchable_tags(self) -> int:
         return 1
