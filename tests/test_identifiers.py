@@ -28,12 +28,25 @@ def test_identifier_comparison():
         SingleTag(tag=Tag("0020000e")),
         SingleTag(tag=Tag("00100020")),
         RepeatingGroup(tag="001010xx"),
+        SingleTag(tag=Tag(0x0008, 0x0050)),
     ]
-    # repeating group was defined last
-    assert str(taglist[2]) == "(0010, 10xx)"
-    taglist.sort(reverse=True)
-    # repeating group, most general, should be first now
-    assert str(taglist[0]) == "(0010, 10xx)"
+
+    # order of definition
+    assert [str(x) for x in taglist] == [
+        "(0020,000E)",
+        "(0010,0020)",
+        "(0010, 10xx)",
+        "(0008,0050)",
+    ]
+
+    # Sorting should order most general tag first, rest according to group,element
+    taglist.sort()
+    assert [str(x) for x in taglist] == [
+        "(0008,0050)",
+        "(0010,0020)",
+        "(0020,000E)",
+        "(0010, 10xx)",
+    ]
 
 
 def test_identifier_matching():
