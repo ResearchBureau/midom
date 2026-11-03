@@ -1,4 +1,7 @@
 # History
+## v0.5.1 (25-09-26)
+* Adds default empty values to Protocol. You can now init an empty Protocol
+
 ## v0.5.0 (02-06-26)
 * Adds initial support for deidentifier validation. Serializable Datasets with PI locations, pixeldata processing
 
