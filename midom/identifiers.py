@@ -89,7 +89,7 @@ class SingleTag(TagIdentifier):
     """Matches a single DICOM tag like (0010,0010) or 'PatientName'"""
 
     HEX_DICOM_TAG_REGEX = re.compile(
-        r"\((?P<first>[0-9a-fA-F]{4}),(?P<second>[0-9a-fA-F]{4})\)",
+        r"\(?(?P<first>[0-9a-fA-F]{4}),(?P<second>[0-9a-fA-F]{4})\)?",
         re.IGNORECASE,
     )
 

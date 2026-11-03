@@ -114,7 +114,7 @@ def test_single_tag(str_in):
     assert SingleTag(SingleTag(str_in).key())
 
 
-@pytest.mark.parametrize("str_in", ["Blabla", "0d33,340d", "1010,100x"])
+@pytest.mark.parametrize("str_in", ["Blabla", "0d33,340dd", "1010,100x"])
 def test_single_tag_fail(str_in):
     with pytest.raises(ValueError):
         SingleTag(str_in)
