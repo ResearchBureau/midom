@@ -8,6 +8,7 @@ from midom.identifiers import (
     RepeatingGroup,
     RepeatingTag,
     SingleTag,
+    tag_identifier_from_string,
 )
 from tests.conftest import DatasetFactory
 
@@ -230,3 +231,18 @@ def test_private_block_identifier():
     assert not PrivateBlockTagIdentifier(
         "0075,[RADBOUDUMCANONYMIZER]00"
     ).matches(element)
+
+
+@pytest.mark.parametrize(
+    "input,expected",
+    [
+        ("PatientID", SingleTag("PatientID")),
+        ("(0010,0020)", SingleTag("PatientID")),  # dicom codes
+        ("00100020", SingleTag("PatientID")),  # different code style
+        ("0008,103E", SingleTag("SeriesDescription")),
+        ("0008,103e", SingleTag("SeriesDescription")),
+    ],
+)
+def test_tag_identifier_from_string(input, expected):
+    """Variations of dicom tag identifiers that should all be parsable"""
+    assert tag_identifier_from_string(input) == expected
