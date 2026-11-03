@@ -1,4 +1,7 @@
 # History
+## v0.5.2 (03-11-26)
+* Fixes Identifier sorting behaviour. Sorting is now done by generality first, DICOM group,element second
+  
 ## v0.5.1 (25-09-26)
 * Adds default empty values to Protocol. You can now init an empty Protocol
 
