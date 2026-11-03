@@ -1,4 +1,8 @@
 # History
+
+## v0.5.3 (03-11-26)
+* Fixes SingleTag init string parsing. SingleTag("0008,103E") is now valid without explicit parenthesis
+
 ## v0.5.2 (03-11-26)
 * Fixes Identifier sorting behaviour. Sorting is now done by generality first, DICOM group,element second
   
